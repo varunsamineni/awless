@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"testing"
 
+	"sort"
+
 	p "github.com/wallix/awless/cloud/properties"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/graph/resourcetest"
@@ -229,5 +231,8 @@ func toRune(arr ...string) [][]rune {
 			out[i] = append(out[i], r)
 		}
 	}
+
+	sort.Slice(out, func(i, j int) bool { return string(out[i]) <= string(out[j]) })
+
 	return out
 }
