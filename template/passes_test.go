@@ -28,6 +28,18 @@ func (c *mockCommand) ValidateParams(p []string) ([]string, error) {
 	panic("wooot")
 }
 
+type metaInternetGateway struct {
+	params map[string]ast.CompositeValue
+}
+
+func (c *metaInternetGateway) Inject(params map[string]ast.CompositeValue) {
+	c.params = params
+}
+
+func (c *metaInternetGateway) Expand() *Template {
+	return &Template{}
+}
+
 func (c *mockCommand) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
 	return []string{"param1", "param2"},
 		func(values map[string]interface{}) (map[string]interface{}, error) {
@@ -64,6 +76,27 @@ func TestCommandsPasses(t *testing.T) {
 		_, _, err := verifyCommandsDefinedPass(tpl, env)
 		if err != nil {
 			t.Fatal(err)
+		}
+	})
+
+	t.Run("resolve meta template", func(t *testing.T) {
+		tpl := MustParse("create internetgateway vpc=@my-vpc")
+		count = 0
+		env.MetaLookuper = func(action, entity string, params []string) (metaCommand, bool) {
+			switch action + "." + entity {
+			case "create.internetgateway":
+				return &metaInternetGateway{}, true
+			}
+			return nil, false
+		}
+		compiled, _, err := resolveMetaTemplatesPass(tpl, env)
+		if err != nil {
+			t.Fatal(err)
+		}
+		expected := `igw = create internetgateway
+attach internetgateway id=$igw vpc=@my-vpc`
+		if got, want := compiled.String(), expected; got != want {
+			t.Fatalf("got %#v, want %#v", got, want)
 		}
 	})
 
