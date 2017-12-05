@@ -11,17 +11,10 @@ import (
 )
 
 type LookupFunc func(...string) interface{}
-type MetaLookupFunc func(string, string, []string) (metaCommand, bool)
-
-type metaCommand interface {
-	Inject(map[string]ast.CompositeValue)
-	Expand() *Template
-}
 
 type Env struct {
-	Lookuper     LookupFunc
-	MetaLookuper MetaLookupFunc
-	IsDryRun     bool
+	Lookuper LookupFunc
+	IsDryRun bool
 
 	ResolvedVariables map[string]interface{}
 
@@ -146,21 +139,6 @@ func verifyCommandsDefinedPass(tpl *Template, env *Env) (*Template, *Env, error)
 		if cmd == nil {
 			return tpl, env, fmt.Errorf("cannot find command for '%s'", key)
 		}
-	}
-	return tpl, env, nil
-}
-
-func resolveMetaTemplatesPass(tpl *Template, env *Env) (*Template, *Env, error) {
-	if env.MetaLookuper == nil {
-		return tpl, env, nil
-	}
-
-	for _, node := range tpl.CommandNodesIterator() {
-		cmd, ok := env.MetaLookuper(node.Action, node.Entity, node.Keys())
-		if !ok {
-			continue
-		}
-		cmd.Inject(node.Params)
 	}
 	return tpl, env, nil
 }

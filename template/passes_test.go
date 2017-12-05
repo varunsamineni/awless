@@ -79,27 +79,6 @@ func TestCommandsPasses(t *testing.T) {
 		}
 	})
 
-	t.Run("resolve meta template", func(t *testing.T) {
-		tpl := MustParse("create internetgateway vpc=@my-vpc")
-		count = 0
-		env.MetaLookuper = func(action, entity string, params []string) (metaCommand, bool) {
-			switch action + "." + entity {
-			case "create.internetgateway":
-				return &metaInternetGateway{}, true
-			}
-			return nil, false
-		}
-		compiled, _, err := resolveMetaTemplatesPass(tpl, env)
-		if err != nil {
-			t.Fatal(err)
-		}
-		expected := `igw = create internetgateway
-attach internetgateway id=$igw vpc=@my-vpc`
-		if got, want := compiled.String(), expected; got != want {
-			t.Fatalf("got %#v, want %#v", got, want)
-		}
-	})
-
 	t.Run("convert params", func(t *testing.T) {
 		tpl := MustParse("create instance\nsub = create subnet param1=anything param2=other\ncreate instance param1=anything")
 		count = 0
