@@ -16,12 +16,12 @@ type ATBuilder struct {
 	template    string
 	cmdResult   *string
 	expectCalls map[string]int
-	expectInput map[string]interface{}
+	expectInput map[string][]interface{}
 	mock        mock
 }
 
 func Template(template string) *ATBuilder {
-	return &ATBuilder{template: template, expectCalls: make(map[string]int), expectInput: make(map[string]interface{})}
+	return &ATBuilder{template: template, expectCalls: make(map[string]int), expectInput: make(map[string][]interface{})}
 }
 
 func (b *ATBuilder) ExpectCommandResult(key string) *ATBuilder {
@@ -37,7 +37,7 @@ func (b *ATBuilder) ExpectCalls(expects ...string) *ATBuilder {
 }
 
 func (b *ATBuilder) ExpectInput(call string, input interface{}) *ATBuilder {
-	b.expectInput[call] = input
+	b.expectInput[call] = append(b.expectInput[call], input)
 	return b
 }
 

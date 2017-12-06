@@ -22,6 +22,11 @@ func Lookuper(action, entity string, paramKeys []string) interface{} {
 		if m.Match(action, entity, paramKeys) {
 			return m
 		}
+	case "attach.policy":
+		m := &AttachPolicyMeta{}
+		if m.Match(action, entity, paramKeys) {
+			return m
+		}
 	}
 	return nil
 }
