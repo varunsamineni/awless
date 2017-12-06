@@ -7,6 +7,7 @@ import (
 	"testing"
 
 	"github.com/wallix/awless/aws/spec"
+	"github.com/wallix/awless/aws/spec/meta"
 	"github.com/wallix/awless/logger"
 	"github.com/wallix/awless/template"
 )
@@ -55,6 +56,7 @@ func (b *ATBuilder) Run(t *testing.T, l ...*logger.Logger) {
 	env.Lookuper = func(tokens ...string) interface{} {
 		return awsspec.CommandFactory.Build(strings.Join(tokens, ""))()
 	}
+	env.MetaLookuper = awsspecmeta.Lookuper
 	compiled, env, err := template.Compile(tpl, env, template.NewRunnerCompileMode)
 	if err != nil {
 		t.Fatal(err)

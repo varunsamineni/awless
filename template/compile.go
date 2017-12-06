@@ -74,6 +74,7 @@ type Mode []compileFunc
 
 var (
 	TestCompileMode = []compileFunc{
+		resolveMetaPass,
 		verifyCommandsDefinedPass,
 		failOnDeclarationWithNoResultPass,
 		validateCommandsParamsPass,

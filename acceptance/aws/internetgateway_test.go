@@ -31,7 +31,7 @@ func TestInternetGateway(t *testing.T) {
 				InternetGatewayId: String("new-internetgateway-id"),
 				VpcId:             String("my-vpc-id"),
 			}).
-			ExpectCommandResult("new-internetgateway-id").ExpectCalls("CreateInternetGateway").Run(t)
+			ExpectCommandResult("new-internetgateway-id").ExpectCalls("CreateInternetGateway", "AttachInternetGateway").Run(t)
 	})
 
 	t.Run("delete", func(t *testing.T) {
