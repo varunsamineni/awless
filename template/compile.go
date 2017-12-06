@@ -13,8 +13,9 @@ import (
 type LookupFunc func(...string) interface{}
 
 type Env struct {
-	Lookuper LookupFunc
-	IsDryRun bool
+	Lookuper     LookupFunc
+	MetaLookuper func(string, string, []string) interface{}
+	IsDryRun     bool
 
 	ResolvedVariables map[string]interface{}
 
@@ -138,6 +139,35 @@ func verifyCommandsDefinedPass(tpl *Template, env *Env) (*Template, *Env, error)
 		cmd := env.Lookuper(key)
 		if cmd == nil {
 			return tpl, env, fmt.Errorf("cannot find command for '%s'", key)
+		}
+	}
+	return tpl, env, nil
+}
+
+func resolveMetaPass(tpl *Template, env *Env) (*Template, *Env, error) {
+	if env.MetaLookuper == nil {
+		return tpl, env, fmt.Errorf("meta command lookuper is undefined")
+	}
+
+	for _, node := range tpl.CommandNodesIterator() {
+		meta := env.MetaLookuper(node.Action, node.Entity, node.Keys())
+		if meta != nil {
+			type R interface {
+				Resolve(map[string]string) (*Template, error)
+			}
+			resolv, ok := meta.(R)
+			if !ok {
+				return tpl, env, errors.New("meta command can not be resolved")
+			}
+			paramsStr := make(map[string]string)
+			for k, v := range node.Params {
+				paramsStr[k] = v.String()
+			}
+			resolved, err := resolv.Resolve(paramsStr)
+			if err != nil {
+				return tpl, env, fmt.Errorf("%s %s: resolve meta command: %s", node.Action, node.Entity, err)
+			}
+			tpl.ReplaceNodeByTemplate(node, resolved)
 		}
 	}
 	return tpl, env, nil
@@ -565,4 +595,21 @@ func contains(arr []string, s string) bool {
 		}
 	}
 	return false
+}
+
+func (t *Template) ReplaceNodeByTemplate(n ast.Node, tplToReplace *Template) error {
+	nodeIndex := -1
+	for i, st := range t.Statements {
+		if st.Node == n {
+			nodeIndex = i
+		}
+	}
+	if nodeIndex == -1 {
+		return fmt.Errorf("node '%v' not found", n)
+	}
+	after := make([]*ast.Statement, len(t.Statements[nodeIndex+1:]))
+	copy(after, t.Statements[nodeIndex+1:])
+	t.Statements = append(t.Statements[:nodeIndex], tplToReplace.Statements...)
+	t.Statements = append(t.Statements, after...)
+	return nil
 }

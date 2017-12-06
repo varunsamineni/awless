@@ -52,6 +52,22 @@ func (c *mockCommand) ConvertParams() ([]string, func(values map[string]interfac
 		}
 }
 
+type CreateInternetgatewayMeta struct {
+	_   struct{} `action:"create" entity:"internetgateway"`
+	Vpc *string  `templateName:"vpc" required:""`
+}
+
+func (m *CreateInternetgatewayMeta) Match(action, entity string, paramKeys []string) bool {
+	if action != "create" && entity != "internetgateway" {
+		return false
+	}
+	return contains(paramKeys, "vpc")
+}
+
+func (m *CreateInternetgatewayMeta) Resolve(params map[string]string) (*Template, error) {
+	return Parse(fmt.Sprintf("igw = create internetgateway\nattach internetgateway id=$igw vpc=%s", params["vpc"]))
+}
+
 func TestCommandsPasses(t *testing.T) {
 	cmd1, cmd2, cmd3 := &mockCommand{"1"}, &mockCommand{"2"}, &mockCommand{"3"}
 	var count int
@@ -76,6 +92,29 @@ func TestCommandsPasses(t *testing.T) {
 		_, _, err := verifyCommandsDefinedPass(tpl, env)
 		if err != nil {
 			t.Fatal(err)
+		}
+	})
+
+	t.Run("resolve meta commands", func(t *testing.T) {
+		tpl := MustParse("create internetgateway vpc=@my-vpc")
+		env.MetaLookuper = func(action, entity string, paramKeys []string) interface{} {
+			switch action + "." + entity {
+			case "create.internetgateway":
+				m := &CreateInternetgatewayMeta{}
+				if m.Match(action, entity, paramKeys) {
+					return m
+				}
+			}
+			return nil
+		}
+		compiled, _, err := resolveMetaPass(tpl, env)
+		if err != nil {
+			t.Fatal(err)
+		}
+		expect := `igw = create internetgateway
+attach internetgateway id=$igw vpc=@my-vpc`
+		if got, want := compiled.String(), expect; got != want {
+			t.Fatalf("got %s, want %s", got, want)
 		}
 	})
 
