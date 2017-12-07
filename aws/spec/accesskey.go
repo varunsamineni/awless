@@ -27,6 +27,8 @@ import (
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/aws/aws-sdk-go/service/iam/iamiface"
 	"github.com/wallix/awless/aws/config"
+	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/cloud/properties"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
@@ -112,6 +114,28 @@ type DeleteAccesskey struct {
 	api    iamiface.IAMAPI
 	Id     *string `awsName:"AccessKeyId" awsType:"awsstr" templateName:"id" required:""`
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user"`
+}
+
+func (cmd *DeleteAccesskey) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
+	return []string{"user", "id"},
+		func(values map[string]interface{}) (map[string]interface{}, error) {
+			_, hasUser := values["user"].(string)
+			id, hasId := values["id"].(string)
+			if !hasUser && hasId {
+				g, err := cmd.graph.Filter(cloud.AccessKey)
+				if err != nil {
+					return values, nil
+				}
+				r, err := g.FindResource(id)
+				if err != nil || r == nil {
+					return values, nil
+				}
+				if keyUser, ok := r.Properties[properties.Username]; ok {
+					values["user"] = keyUser
+				}
+			}
+			return values, nil
+		}
 }
 
 func (cmd *DeleteAccesskey) ValidateParams(params []string) ([]string, error) {

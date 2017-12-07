@@ -174,6 +174,10 @@ func Certificate(id string) *rBuilder {
 	return new("certificate", id)
 }
 
+func AccessKey(id string) *rBuilder {
+	return new("accesskey", id)
+}
+
 func (b *rBuilder) Prop(key string, value interface{}) *rBuilder {
 	b.props[key] = value
 	return b

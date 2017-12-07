@@ -1,16 +1,17 @@
 package awsat
 
 import (
-	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
-	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/wallix/awless/aws/config"
 	"github.com/wallix/awless/aws/spec"
+	"github.com/wallix/awless/cloud/properties"
+	"github.com/wallix/awless/graph"
+	"github.com/wallix/awless/graph/resourcetest"
 )
 
 func TestAccesskey(t *testing.T) {
@@ -72,34 +73,29 @@ aws_secret_access_key = MYSECRETKEY
 				AccessKeyId: String("ACCESSKEYID"),
 			}).ExpectCalls("DeleteAccessKey").Run(t)
 		})
-		t.Run("without user rights to list accesskeys", func(t *testing.T) {
+		t.Run("without user and id in local graph", func(t *testing.T) {
+			g := graph.NewGraph()
+			g.AddResource(resourcetest.AccessKey("ACCESSKEYID").Prop(properties.Username, "myusername").Build())
+			g.AddResource(resourcetest.AccessKey("OTHERACCESSKEYID").Prop(properties.Username, "notthis").Build())
 			Template("delete accesskey id=ACCESSKEYID").
 				Mock(&iamMock{
 					DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
 						return nil, nil
 					},
-					ListAccessKeysFunc: func(param0 *iam.ListAccessKeysInput) (*iam.ListAccessKeysOutput, error) {
-						return &iam.ListAccessKeysOutput{
-							AccessKeyMetadata: []*iam.AccessKeyMetadata{{AccessKeyId: String("ACCESSKEYID"), UserName: String("myusername")}},
-						}, nil
-					},
-				}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
+				}).Graph(g).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
 				UserName:    String("myusername"),
 				AccessKeyId: String("ACCESSKEYID"),
-			}).ExpectCalls("DeleteAccessKey", "ListAccessKeys").Run(t)
+			}).ExpectCalls("DeleteAccessKey").Run(t)
 		})
-		t.Run("without no rights to list accesskeys", func(t *testing.T) {
+		t.Run("without user and id not in local graph", func(t *testing.T) {
 			Template("delete accesskey id=ACCESSKEYID").
 				Mock(&iamMock{
 					DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
 						return nil, nil
 					},
-					ListAccessKeysFunc: func(param0 *iam.ListAccessKeysInput) (*iam.ListAccessKeysOutput, error) {
-						return nil, awserr.New("AccessDenied", "can not list access keys", errors.New("can not list access keys"))
-					},
 				}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
 				AccessKeyId: String("ACCESSKEYID"),
-			}).ExpectCalls("DeleteAccessKey", "ListAccessKeys").Run(t)
+			}).ExpectCalls("DeleteAccessKey").Run(t)
 		})
 	})
 }
