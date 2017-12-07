@@ -1,11 +1,13 @@
 package awsat
 
 import (
+	"errors"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"testing"
 
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/wallix/awless/aws/config"
 	"github.com/wallix/awless/aws/spec"
@@ -59,15 +61,46 @@ aws_secret_access_key = MYSECRETKEY
 	})
 
 	t.Run("delete", func(t *testing.T) {
-		Template("delete accesskey id=ACCESSKEYID user=jdoe").
-			Mock(&iamMock{
-				DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
-					return nil, nil
-				},
-			}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
-			UserName:    String("jdoe"),
-			AccessKeyId: String("ACCESSKEYID"),
-		}).ExpectCalls("DeleteAccessKey").Run(t)
+		t.Run("with user", func(t *testing.T) {
+			Template("delete accesskey id=ACCESSKEYID user=jdoe").
+				Mock(&iamMock{
+					DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
+						return nil, nil
+					},
+				}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
+				UserName:    String("jdoe"),
+				AccessKeyId: String("ACCESSKEYID"),
+			}).ExpectCalls("DeleteAccessKey").Run(t)
+		})
+		t.Run("without user rights to list accesskeys", func(t *testing.T) {
+			Template("delete accesskey id=ACCESSKEYID").
+				Mock(&iamMock{
+					DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
+						return nil, nil
+					},
+					ListAccessKeysFunc: func(param0 *iam.ListAccessKeysInput) (*iam.ListAccessKeysOutput, error) {
+						return &iam.ListAccessKeysOutput{
+							AccessKeyMetadata: []*iam.AccessKeyMetadata{{AccessKeyId: String("ACCESSKEYID"), UserName: String("myusername")}},
+						}, nil
+					},
+				}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
+				UserName:    String("myusername"),
+				AccessKeyId: String("ACCESSKEYID"),
+			}).ExpectCalls("DeleteAccessKey", "ListAccessKeys").Run(t)
+		})
+		t.Run("without no rights to list accesskeys", func(t *testing.T) {
+			Template("delete accesskey id=ACCESSKEYID").
+				Mock(&iamMock{
+					DeleteAccessKeyFunc: func(param0 *iam.DeleteAccessKeyInput) (*iam.DeleteAccessKeyOutput, error) {
+						return nil, nil
+					},
+					ListAccessKeysFunc: func(param0 *iam.ListAccessKeysInput) (*iam.ListAccessKeysOutput, error) {
+						return nil, awserr.New("AccessDenied", "can not list access keys", errors.New("can not list access keys"))
+					},
+				}).ExpectInput("DeleteAccessKey", &iam.DeleteAccessKeyInput{
+				AccessKeyId: String("ACCESSKEYID"),
+			}).ExpectCalls("DeleteAccessKey", "ListAccessKeys").Run(t)
+		})
 	})
 }
 

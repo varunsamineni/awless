@@ -245,7 +245,7 @@ limitations under the License.
 package awsspec
 
 {{ range $cmdName, $tag := . }}
-func New{{ $cmdName }}(sess *session.Session, l ...*logger.Logger) *{{ $cmdName }}{
+func New{{ $cmdName }}(sess *session.Session, g *graph.Graph, l ...*logger.Logger) *{{ $cmdName }}{
 	cmd := new({{ $cmdName }})
 	if len(l) > 0 {
 		cmd.logger = l[0]
@@ -255,6 +255,10 @@ func New{{ $cmdName }}(sess *session.Session, l ...*logger.Logger) *{{ $cmdName 
 	if sess != nil {
 		cmd.api = {{ $tag.API }}.New(sess)
 	}
+	if g == nil {
+		g = graph.NewGraph()
+	}
+	cmd.graph = g
 	return cmd
 }
 
@@ -409,13 +413,14 @@ var MockAWSSessionFactory = &AWSFactory{
 type AWSFactory struct {
 	Log   *logger.Logger
 	Sess *session.Session
+	Graph *graph.Graph
 }
 
 func (f *AWSFactory) Build(key string) func() interface{} {
 	switch key {
 	{{- range $cmdName, $tag := . }}
 	case "{{ $tag.Action }}{{ $tag.Entity }}":
-		return func() interface{} { return New{{ $cmdName }}(f.Sess, f.Log) }
+		return func() interface{} { return New{{ $cmdName }}(f.Sess, f.Graph, f.Log) }
 	{{- end}}
 	}
 	return nil
