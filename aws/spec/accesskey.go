@@ -130,7 +130,7 @@ func (cmd *DeleteAccesskey) ConvertParams() ([]string, func(values map[string]in
 				if err != nil || r == nil {
 					return values, nil
 				}
-				if keyUser, ok := r.Properties[properties.Username]; ok {
+				if keyUser, ok := r.Properties()[properties.Username]; ok {
 					values["user"] = keyUser
 				}
 			}

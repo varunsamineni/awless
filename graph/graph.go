@@ -55,7 +55,7 @@ func (g *Graph) AddResource(resources ...*Resource) error {
 			return err
 		}
 
-		for relType, attachedRes := range res.Relations {
+		for relType, attachedRes := range res.relations {
 			switch relType {
 			case rdf.ChildrenOfRel:
 				for _, attached := range attachedRes {
