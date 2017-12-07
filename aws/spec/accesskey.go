@@ -27,12 +27,14 @@ import (
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/aws/aws-sdk-go/service/iam/iamiface"
 	"github.com/wallix/awless/aws/config"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateAccesskey struct {
 	_      string `action:"create" entity:"accesskey" awsAPI:"iam" awsCall:"CreateAccessKey" awsInput:"iam.CreateAccessKeyInput" awsOutput:"iam.CreateAccessKeyOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    iamiface.IAMAPI
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user" required:""`
 	Save   *bool   `templateName:"save"`
@@ -106,6 +108,7 @@ func (cmd *CreateAccesskey) ExtractResult(i interface{}) string {
 type DeleteAccesskey struct {
 	_      string `action:"delete" entity:"accesskey" awsAPI:"iam" awsCall:"DeleteAccessKey" awsInput:"iam.DeleteAccessKeyInput" awsOutput:"iam.DeleteAccessKeyOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    iamiface.IAMAPI
 	Id     *string `awsName:"AccessKeyId" awsType:"awsstr" templateName:"id" required:""`
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user"`

@@ -21,12 +21,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3iface"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateBucket struct {
 	_      string `action:"create" entity:"bucket" awsAPI:"s3" awsCall:"CreateBucket" awsInput:"s3.CreateBucketInput" awsOutput:"s3.CreateBucketOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    s3iface.S3API
 	Name   *string `awsName:"Bucket" awsType:"awsstr" templateName:"name" required:""`
 	Acl    *string `awsName:"ACL" awsType:"awsstr" templateName:"acl"`
@@ -43,6 +45,7 @@ func (cmd *CreateBucket) ExtractResult(i interface{}) string {
 type UpdateBucket struct {
 	_                string `action:"update" entity:"bucket" awsAPI:"s3"`
 	logger           *logger.Logger
+	graph            *graph.Graph
 	api              s3iface.S3API
 	Name             *string `templateName:"name" required:""`
 	Acl              *string `templateName:"acl"`
@@ -112,6 +115,7 @@ func (cmd *UpdateBucket) ManualRun(ctx map[string]interface{}) (interface{}, err
 type DeleteBucket struct {
 	_      string `action:"delete" entity:"bucket" awsAPI:"s3" awsCall:"DeleteBucket" awsInput:"s3.DeleteBucketInput" awsOutput:"s3.DeleteBucketOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    s3iface.S3API
 	Name   *string `awsName:"Bucket" awsType:"awsstr" templateName:"name" required:""`
 }

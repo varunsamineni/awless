@@ -27,6 +27,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/cloudformation/cloudformationiface"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 	"gopkg.in/yaml.v2"
 )
@@ -34,6 +35,7 @@ import (
 type CreateStack struct {
 	_               string `action:"create" entity:"stack" awsAPI:"cloudformation" awsCall:"CreateStack" awsInput:"cloudformation.CreateStackInput" awsOutput:"cloudformation.CreateStackOutput"`
 	logger          *logger.Logger
+	graph           *graph.Graph
 	api             cloudformationiface.CloudFormationAPI
 	Name            *string   `awsName:"StackName" awsType:"awsstr" templateName:"name" required:""`
 	TemplateFile    *string   `awsName:"TemplateBody" awsType:"awsfiletostring" templateName:"template-file" required:""`
@@ -78,6 +80,7 @@ func (cmd *CreateStack) BeforeRun(ctx map[string]interface{}) error {
 type UpdateStack struct {
 	_                   string `action:"update" entity:"stack" awsAPI:"cloudformation" awsCall:"UpdateStack" awsInput:"cloudformation.UpdateStackInput" awsOutput:"cloudformation.UpdateStackOutput"`
 	logger              *logger.Logger
+	graph               *graph.Graph
 	api                 cloudformationiface.CloudFormationAPI
 	Name                *string   `awsName:"StackName" awsType:"awsstr" templateName:"name" required:""`
 	Capabilities        []*string `awsName:"Capabilities" awsType:"awsstringslice" templateName:"capabilities"`
@@ -237,6 +240,7 @@ func mergeCliAndFileValues(valMap map[string]string, valSlice []*string) (resSli
 type DeleteStack struct {
 	_               string `action:"delete" entity:"stack" awsAPI:"cloudformation" awsCall:"DeleteStack" awsInput:"cloudformation.DeleteStackInput" awsOutput:"cloudformation.DeleteStackOutput"`
 	logger          *logger.Logger
+	graph           *graph.Graph
 	api             cloudformationiface.CloudFormationAPI
 	Name            *string   `awsName:"StackName" awsType:"awsstr" templateName:"name" required:""`
 	RetainResources []*string `awsName:"RetainResources" awsType:"awsstringslice" templateName:"retain-resources"`

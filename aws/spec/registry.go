@@ -26,12 +26,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/aws/aws-sdk-go/service/ecr/ecriface"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type AuthenticateRegistry struct {
 	_                string `action:"authenticate" entity:"registry" awsAPI:"ecr"`
 	logger           *logger.Logger
+	graph            *graph.Graph
 	api              ecriface.ECRAPI
 	Accounts         []*string `templateName:"accounts"`
 	NoConfirm        *bool     `templateName:"no-confirm"`

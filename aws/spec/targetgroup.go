@@ -20,12 +20,14 @@ import (
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/elbv2"
 	"github.com/aws/aws-sdk-go/service/elbv2/elbv2iface"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateTargetgroup struct {
 	_                   string `action:"create" entity:"targetgroup" awsAPI:"elbv2" awsCall:"CreateTargetGroup" awsInput:"elbv2.CreateTargetGroupInput" awsOutput:"elbv2.CreateTargetGroupOutput"`
 	logger              *logger.Logger
+	graph               *graph.Graph
 	api                 elbv2iface.ELBV2API
 	Name                *string `awsName:"Name" awsType:"awsstr" templateName:"name" required:""`
 	Port                *int64  `awsName:"Port" awsType:"awsint64" templateName:"port" required:""`
@@ -52,6 +54,7 @@ func (cmd *CreateTargetgroup) ExtractResult(i interface{}) string {
 type UpdateTargetgroup struct {
 	_                   string `action:"update" entity:"targetgroup" awsAPI:"elbv2"`
 	logger              *logger.Logger
+	graph               *graph.Graph
 	api                 elbv2iface.ELBV2API
 	Id                  *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"id" required:""`
 	Deregistrationdelay *string `awsType:"awsstr" templateName:"deregistrationdelay"`
@@ -178,6 +181,7 @@ func (tg *UpdateTargetgroup) ManualRun(ctx map[string]interface{}) (interface{},
 type DeleteTargetgroup struct {
 	_      string `action:"delete" entity:"targetgroup" awsAPI:"elbv2" awsCall:"DeleteTargetGroup" awsInput:"elbv2.DeleteTargetGroupInput" awsOutput:"elbv2.DeleteTargetGroupOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    elbv2iface.ELBV2API
 	Id     *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"id" required:""`
 }

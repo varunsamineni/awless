@@ -31,12 +31,14 @@ import (
 	"github.com/fatih/color"
 	"github.com/fxaguessy/readline"
 	"github.com/wallix/awless/aws/config"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateMfadevice struct {
 	_      string `action:"create" entity:"mfadevice" awsAPI:"iam"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    iamiface.IAMAPI
 	Name   *string `templateName:"name" required:""`
 }
@@ -85,6 +87,7 @@ func (cmd *CreateMfadevice) ExtractResult(i interface{}) string {
 type DeleteMfadevice struct {
 	_      string `action:"delete" entity:"mfadevice" awsAPI:"iam" awsCall:"DeleteVirtualMFADevice" awsInput:"iam.DeleteVirtualMFADeviceInput" awsOutput:"iam.DeleteVirtualMFADeviceOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    iamiface.IAMAPI
 	Id     *string `awsName:"SerialNumber" awsType:"awsstr" templateName:"id" required:""`
 }
@@ -100,6 +103,7 @@ var (
 type AttachMfadevice struct {
 	_        string `action:"attach" entity:"mfadevice" awsAPI:"iam" awsCall:"EnableMFADevice" awsInput:"iam.EnableMFADeviceInput" awsOutput:"iam.EnableMFADeviceOutput"`
 	logger   *logger.Logger
+	graph    *graph.Graph
 	api      iamiface.IAMAPI
 	Id       *string `awsName:"SerialNumber" awsType:"awsstr" templateName:"id" required:""`
 	User     *string `awsName:"UserName" awsType:"awsstr" templateName:"user" required:""`
@@ -155,6 +159,7 @@ func (cmd *AttachMfadevice) AfterRun(ctx map[string]interface{}, output interfac
 type DetachMfadevice struct {
 	_      string `action:"detach" entity:"mfadevice" awsAPI:"iam" awsCall:"DeactivateMFADevice" awsInput:"iam.DeactivateMFADeviceInput" awsOutput:"iam.DeactivateMFADeviceOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    iamiface.IAMAPI
 	Id     *string `awsName:"SerialNumber" awsType:"awsstr" templateName:"id" required:""`
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user" required:""`

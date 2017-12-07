@@ -22,12 +22,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	"github.com/aws/aws-sdk-go/service/cloudwatch/cloudwatchiface"
+	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateAlarm struct {
 	_                       string `action:"create" entity:"alarm" awsAPI:"cloudwatch" awsCall:"PutMetricAlarm" awsInput:"cloudwatch.PutMetricAlarmInput" awsOutput:"cloudwatch.PutMetricAlarmOutput"`
 	logger                  *logger.Logger
+	graph                   *graph.Graph
 	api                     cloudwatchiface.CloudWatchAPI
 	Name                    *string   `awsName:"AlarmName" awsType:"awsstr" templateName:"name" required:""`
 	Operator                *string   `awsName:"ComparisonOperator" awsType:"awsstr" templateName:"operator" required:""`
@@ -61,6 +63,7 @@ func (cmd *CreateAlarm) ExtractResult(i interface{}) string {
 type DeleteAlarm struct {
 	_      string `action:"delete" entity:"alarm" awsAPI:"cloudwatch" awsCall:"DeleteAlarms" awsInput:"cloudwatch.DeleteAlarmsInput" awsOutput:"cloudwatch.DeleteAlarmsOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    cloudwatchiface.CloudWatchAPI
 	Name   []*string `awsName:"AlarmNames" awsType:"awsstringslice" templateName:"name" required:""`
 }
@@ -72,6 +75,7 @@ func (cmd *DeleteAlarm) ValidateParams(params []string) ([]string, error) {
 type StartAlarm struct {
 	_      string `action:"start" entity:"alarm" awsAPI:"cloudwatch" awsCall:"EnableAlarmActions" awsInput:"cloudwatch.EnableAlarmActionsInput" awsOutput:"cloudwatch.EnableAlarmActionsOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    cloudwatchiface.CloudWatchAPI
 	Names  []*string `awsName:"AlarmNames" awsType:"awsstringslice" templateName:"names" required:""`
 }
@@ -83,6 +87,7 @@ func (cmd *StartAlarm) ValidateParams(params []string) ([]string, error) {
 type StopAlarm struct {
 	_      string `action:"stop" entity:"alarm" awsAPI:"cloudwatch" awsCall:"DisableAlarmActions" awsInput:"cloudwatch.DisableAlarmActionsInput" awsOutput:"cloudwatch.DisableAlarmActionsOutput"`
 	logger *logger.Logger
+	graph  *graph.Graph
 	api    cloudwatchiface.CloudWatchAPI
 	Names  []*string `awsName:"AlarmNames" awsType:"awsstringslice" templateName:"names" required:""`
 }
@@ -94,6 +99,7 @@ func (cmd *StopAlarm) ValidateParams(params []string) ([]string, error) {
 type AttachAlarm struct {
 	_         string `action:"attach" entity:"alarm" awsAPI:"cloudwatch"`
 	logger    *logger.Logger
+	graph     *graph.Graph
 	api       cloudwatchiface.CloudWatchAPI
 	Name      *string `templateName:"name" required:""`
 	ActionArn *string `templateName:"action-arn" required:""`
@@ -135,6 +141,7 @@ func (cmd *AttachAlarm) ManualRun(ctx map[string]interface{}) (interface{}, erro
 type DetachAlarm struct {
 	_         string `action:"detach" entity:"alarm" awsAPI:"cloudwatch"`
 	logger    *logger.Logger
+	graph     *graph.Graph
 	api       cloudwatchiface.CloudWatchAPI
 	Name      *string `templateName:"name" required:""`
 	ActionArn *string `templateName:"action-arn" required:""`
