@@ -26,6 +26,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/elbv2"
 	"github.com/aws/aws-sdk-go/service/elbv2/elbv2iface"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateLoadbalancer struct {
@@ -40,6 +41,13 @@ type CreateLoadbalancer struct {
 	Scheme         *string   `awsName:"Scheme" awsType:"awsstr" templateName:"scheme"`
 	Securitygroups []*string `awsName:"SecurityGroups" awsType:"awsstringslice" templateName:"securitygroups"`
 	Type           *string   `awsName:"Type" awsType:"awsstr" templateName:"type"`
+}
+
+func (cmd *CreateLoadbalancer) Params() params.Rule {
+	return params.AllOf(
+		params.Key("name"), params.Key("subnets"),
+		params.Opt("subnet-mappings", "iptype", "scheme", "securitygroups", "type"),
+	)
 }
 
 func (cmd *CreateLoadbalancer) ValidateParams(params []string) ([]string, error) {

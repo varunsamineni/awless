@@ -27,6 +27,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/aws/aws-sdk-go/service/elbv2/elbv2iface"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateInstance struct {
@@ -46,6 +47,14 @@ type CreateInstance struct {
 	Lock           *bool     `awsName:"DisableApiTermination" awsType:"awsbool" templateName:"lock"`
 	Role           *string   `awsName:"IamInstanceProfile.Name" awsType:"awsstr" templateName:"role"`
 	DistroQuery    *string   `awsType:"awsstr" templateName:"distro"`
+}
+
+func (cmd *CreateInstance) Params() params.Rule {
+	return params.AllOf(
+		params.OnlyOneOf(params.Key("distro"), params.Key("image")),
+		params.Key("count"), params.Key("type"), params.Key("name"), params.Key("subnet"),
+		params.Opt("keypair", "ip", "userdata", "securitygroup", "lock", "role"),
+	)
 }
 
 func (cmd *CreateInstance) ValidateParams(params []string) ([]string, error) {

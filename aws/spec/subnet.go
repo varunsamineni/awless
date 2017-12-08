@@ -24,6 +24,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateSubnet struct {
@@ -36,6 +37,13 @@ type CreateSubnet struct {
 	AvailabilityZone *string `awsName:"AvailabilityZone" awsType:"awsstr" templateName:"availabilityzone"`
 	Public           *bool   `awsType:"awsboolattribute" templateName:"public"`
 	Name             *string `templateName:"name"`
+}
+
+func (cmd *CreateSubnet) Params() params.Rule {
+	return params.AllOf(
+		params.Key("cidr"), params.Key("vpc"),
+		params.Opt("availabilityzone", "public", "name"),
+	)
 }
 
 func (cmd *CreateSubnet) ValidateParams(params []string) ([]string, error) {
@@ -76,6 +84,10 @@ type UpdateSubnet struct {
 	api    ec2iface.EC2API
 	Id     *string `awsName:"SubnetId" awsType:"awsstr" templateName:"id" required:""`
 	Public *bool   `awsName:"MapPublicIpOnLaunch" awsType:"awsboolattribute" templateName:"public"`
+}
+
+func (cmd *UpdateSubnet) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Opt("public"))
 }
 
 func (cmd *UpdateSubnet) ValidateParams(params []string) ([]string, error) {

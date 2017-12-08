@@ -119,6 +119,11 @@ func TestValidateRule(t *testing.T) {
 		{rules: AtLeastOneOf(Key("1")), in: []string{"2"}, expectErr: true, errContains: []string{"1"}},
 
 		{rules: AllOf(
+			OnlyOneOf(Key("distro"), Key("image")),
+			Key("count"), Key("type"), Key("name"), Key("subnet")),
+			in: []string{"image", "count", "name", "subnet", "type"}},
+
+		{rules: AllOf(
 			OnlyOneOf(Key("1"), Key("2")),
 			Key("3")),
 			in: []string{"4"}, expectErr: true, errContains: []string{"1", "2", "3"}},

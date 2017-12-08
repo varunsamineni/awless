@@ -9,24 +9,8 @@ import (
 	"testing"
 
 	"github.com/wallix/awless/template/internal/ast"
+	"github.com/wallix/awless/template/params"
 )
-
-type mockCommand struct{ id string }
-
-func (c *mockCommand) ValidateCommand(map[string]interface{}, []string) []error {
-	return []error{errors.New(c.id)}
-}
-func (c *mockCommand) Run(ctx, params map[string]interface{}) (interface{}, error)    { return nil, nil }
-func (c *mockCommand) DryRun(ctx, params map[string]interface{}) (interface{}, error) { return nil, nil }
-func (c *mockCommand) ValidateParams(p []string) ([]string, error) {
-	switch c.id {
-	case "1", "2":
-		return []string{c.id}, nil
-	case "3":
-		return []string{c.id}, errors.New("unexpected")
-	}
-	panic("wooot")
-}
 
 func (c *mockCommand) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
 	return []string{"param1", "param2"},
@@ -99,7 +83,7 @@ func TestCommandsPasses(t *testing.T) {
 	t.Run("normalize missing required params as hole", func(t *testing.T) {
 		tpl := MustParse("create instance\nsub = create subnet")
 		count = 0
-		compiled, _, err := normalizeMissingRequiredParamsAsHolePass(tpl, env)
+		compiled, _, err := processAndValidateParamsPass(tpl, env)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -435,7 +419,45 @@ func TestCmdErr(t *testing.T) {
 	}
 }
 
-type params map[string]interface{}
+type mockCommand struct{ id string }
+
+func (c *mockCommand) ValidateCommand(map[string]interface{}, []string) []error {
+	return []error{errors.New(c.id)}
+}
+func (c *mockCommand) Run(ctx, params map[string]interface{}) (interface{}, error)    { return nil, nil }
+func (c *mockCommand) DryRun(ctx, params map[string]interface{}) (interface{}, error) { return nil, nil }
+
+type mockRule struct {
+	id string
+}
+
+func (m *mockRule) Validate(input []string) error {
+	switch m.id {
+	case "1", "2":
+		return nil
+	case "3":
+		return errors.New("unexpected")
+	}
+	panic("wooot")
+}
+func (m *mockRule) Required() []string  { return nil }
+func (m *mockRule) Optionals() []string { return nil }
+func (m *mockRule) Missing(input []string) []string {
+	switch m.id {
+	case "1", "2":
+		return []string{m.id}
+	case "3":
+		return []string{m.id}
+	}
+	panic("wooot")
+}
+func (m *mockRule) String() string { return "" }
+
+func (c *mockCommand) Params() params.Rule {
+	return &mockRule{c.id}
+}
+
+type parameters map[string]interface{}
 type holesKeys map[string][]string
 type refs map[string][]string
 type aliases map[string][]string
@@ -451,9 +473,9 @@ func assertVariableValues(t *testing.T, tpl *Template, exp ...interface{}) {
 	}
 }
 
-func assertCmdParams(t *testing.T, tpl *Template, exp ...params) {
+func assertCmdParams(t *testing.T, tpl *Template, exp ...parameters) {
 	for i, cmd := range tpl.CommandNodesIterator() {
-		if got, want := params(cmd.ToDriverParams()), exp[i]; !reflect.DeepEqual(got, want) {
+		if got, want := parameters(cmd.ToDriverParams()), exp[i]; !reflect.DeepEqual(got, want) {
 			t.Fatalf("params: cmd %d: \ngot\n%v\n\nwant\n%v\n", i+1, got, want)
 		}
 	}

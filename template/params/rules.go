@@ -26,7 +26,7 @@ func (n allOf) Validate(input []string) (err error) {
 	for _, r := range n.rules {
 		err = r.Validate(input)
 		if err != nil {
-			return fmt.Errorf("all of %v", n.rules)
+			return errors.New(n.String())
 		}
 	}
 	return nil
@@ -47,7 +47,7 @@ func (n allOf) Required() (all []string) {
 }
 
 func (n allOf) String() string {
-	return fmt.Sprintf("all of %v", n.rules)
+	return n.rules.join(", ")
 }
 
 type onlyOneOf struct {
@@ -69,7 +69,7 @@ func (n onlyOneOf) Validate(input []string) error {
 		}
 	}
 	if pass != 1 {
-		return fmt.Errorf("only one of %v", n.rules)
+		return fmt.Errorf("only %s", n.rules)
 	}
 	return nil
 }
@@ -89,7 +89,7 @@ func (n onlyOneOf) Required() (all []string) {
 }
 
 func (n onlyOneOf) String() string {
-	return fmt.Sprintf("only one of %v", n.rules)
+	return "[" + n.rules.join(" | ") + "]"
 }
 
 type atLeastOneOf struct {
@@ -161,7 +161,7 @@ func (n opt) Optionals() []string {
 }
 
 func (n opt) String() string {
-	return fmt.Sprintf("optionals: %s", strings.Join(n.optionals, ","))
+	return "[" + strings.Join(n.optionals, " ") + "]"
 }
 
 type Key string
@@ -200,7 +200,17 @@ func build(rules []Rule) (d defaultRule) {
 }
 
 type defaultRule struct {
-	rules []Rule
+	rules rules
+}
+
+type rules []Rule
+
+func (rs rules) join(sep string) string {
+	var arr []string
+	for _, r := range rs {
+		arr = append(arr, fmt.Sprint(r))
+	}
+	return strings.Join(arr, sep)
 }
 
 func (r defaultRule) Optionals() (o []string) {

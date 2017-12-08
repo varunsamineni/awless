@@ -8,6 +8,7 @@ import (
 
 	"github.com/wallix/awless/logger"
 	"github.com/wallix/awless/template/internal/ast"
+	"github.com/wallix/awless/template/params"
 )
 
 type LookupFunc func(...string) interface{}
@@ -75,8 +76,7 @@ var (
 	TestCompileMode = []compileFunc{
 		verifyCommandsDefinedPass,
 		failOnDeclarationWithNoResultPass,
-		validateCommandsParamsPass,
-		normalizeMissingRequiredParamsAsHolePass,
+		processAndValidateParamsPass,
 		checkInvalidReferenceDeclarationsPass,
 		resolveHolesPass,
 		resolveMissingHolesPass,
@@ -87,8 +87,7 @@ var (
 	NewRunnerCompileMode = []compileFunc{
 		verifyCommandsDefinedPass,
 		failOnDeclarationWithNoResultPass,
-		validateCommandsParamsPass,
-		normalizeMissingRequiredParamsAsHolePass,
+		processAndValidateParamsPass,
 		checkInvalidReferenceDeclarationsPass,
 		resolveHolesPass,
 		resolveMissingHolesPass,
@@ -187,11 +186,11 @@ func validateCommandsParamsPass(tpl *Template, env *Env) (*Template, *Env, error
 		if cmd == nil {
 			return fmt.Errorf("validate: cannot find command for '%s'", key)
 		}
-		type VP interface {
-			ValidateParams([]string) ([]string, error)
+		type PR interface {
+			Params() params.Rule
 		}
-		if v, ok := cmd.(VP); ok {
-			if _, err := v.ValidateParams(node.Keys()); err != nil {
+		if v, ok := cmd.(PR); ok {
+			if err := v.Params().Validate(node.Keys()); err != nil {
 				return cmdErr(node, err)
 			}
 		} else {
@@ -204,32 +203,32 @@ func validateCommandsParamsPass(tpl *Template, env *Env) (*Template, *Env, error
 	return tpl, env, err
 }
 
-func normalizeMissingRequiredParamsAsHolePass(tpl *Template, env *Env) (*Template, *Env, error) {
-	normalize := func(node *ast.CommandNode) error {
+func processAndValidateParamsPass(tpl *Template, env *Env) (*Template, *Env, error) {
+	normalizeMissingRequiredParamsAsHoleAndValidate := func(node *ast.CommandNode) error {
 		key := fmt.Sprintf("%s%s", node.Action, node.Entity)
 		cmd := env.Lookuper(key)
 		if cmd == nil {
-			return fmt.Errorf("normalize: cannot find command for '%s'", key)
+			return fmt.Errorf("process params: cannot find command for '%s'", key)
 		}
-		type VP interface {
-			ValidateParams([]string) ([]string, error)
+		type PR interface {
+			Params() params.Rule
 		}
-		if v, ok := cmd.(VP); ok {
-			missing, err := v.ValidateParams(node.Keys())
-			if err != nil {
-				return cmdErr(node, err)
-			}
-			for _, e := range missing {
-				normalized := fmt.Sprintf("%s.%s", node.Entity, e)
-				node.Params[e] = ast.NewHoleValue(normalized)
-			}
-		} else {
-			return cmdErr(node, "command does not implement param normalization")
+		rule, ok := cmd.(PR)
+		if !ok {
+			return cmdErr(node, "command does not implement param rules")
+		}
+		missing := rule.Params().Missing(node.Keys())
+		for _, e := range missing {
+			normalized := fmt.Sprintf("%s.%s", node.Entity, e)
+			node.Params[e] = ast.NewHoleValue(normalized)
+		}
+		if err := rule.Params().Validate(node.Keys()); err != nil {
+			return cmdErr(node, err)
 		}
 		return nil
 	}
 
-	err := tpl.visitCommandNodesE(normalize)
+	err := tpl.visitCommandNodesE(normalizeMissingRequiredParamsAsHoleAndValidate)
 	return tpl, env, err
 }
 
