@@ -56,6 +56,9 @@ func (b *ATBuilder) Run(t *testing.T, l ...*logger.Logger) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if b.graph == nil {
+		b.graph = graph.NewGraph()
+	}
 	awsspec.CommandFactory = NewAcceptanceFactory(b.mock, b.graph, l...)
 
 	env := template.NewEnv()

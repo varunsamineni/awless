@@ -162,7 +162,8 @@ func (g *Graph) FindOne(q cloudgraph.Query) (cloudgraph.Resource, error) {
 	var filters []FilterFn
 	for _, prop := range q.PropertyValues {
 		filters = append(filters, func(r *Resource) bool {
-			return reflect.DeepEqual(r.Property(prop.Name), prop.Value)
+			v, _ := r.Property(prop.Name)
+			return reflect.DeepEqual(v, prop.Value)
 		})
 	}
 	filtered, err := g.Filter(q.ResourceType, filters...)

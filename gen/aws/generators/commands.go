@@ -257,9 +257,6 @@ func New{{ $cmdName }}(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = {{ $tag.API }}.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }

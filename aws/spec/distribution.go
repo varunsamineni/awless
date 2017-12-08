@@ -20,18 +20,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/cloudfront"
 	"github.com/aws/aws-sdk-go/service/cloudfront/cloudfrontiface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateDistribution struct {
 	_              string `action:"create" entity:"distribution" awsAPI:"cloudfront"`
 	logger         *logger.Logger
-	graph          *graph.Graph
+	graph          cloudgraph.GraphAPI
 	api            cloudfrontiface.CloudFrontAPI
 	OriginDomain   *string   `templateName:"origin-domain" required:""`
 	Certificate    *string   `templateName:"certificate"`
@@ -144,7 +145,7 @@ func (cmd *CreateDistribution) ExtractResult(i interface{}) string {
 type CheckDistribution struct {
 	_       string `action:"check" entity:"distribution" awsAPI:"cloudfront"`
 	logger  *logger.Logger
-	graph   *graph.Graph
+	graph   cloudgraph.GraphAPI
 	api     cloudfrontiface.CloudFrontAPI
 	Id      *string `templateName:"id" required:""`
 	State   *string `templateName:"state" required:""`
@@ -192,7 +193,7 @@ func (cmd *CheckDistribution) ManualRun(ctx map[string]interface{}) (interface{}
 type UpdateDistribution struct {
 	_              string `action:"update" entity:"distribution" awsAPI:"cloudfront"`
 	logger         *logger.Logger
-	graph          *graph.Graph
+	graph          cloudgraph.GraphAPI
 	api            cloudfrontiface.CloudFrontAPI
 	Id             *string   `awsName:"Id" awsType:"awsstr" templateName:"id" required:""`
 	OriginDomain   *string   `templateName:"origin-domain"`
@@ -347,7 +348,7 @@ func (cmd *UpdateDistribution) ExtractResult(i interface{}) string {
 type DeleteDistribution struct {
 	_      string `action:"delete" entity:"distribution" awsAPI:"cloudfront"`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    cloudfrontiface.CloudFrontAPI
 	Id     *string `awsName:"Id" awsType:"awsstr" templateName:"id" required:""`
 }

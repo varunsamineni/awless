@@ -19,19 +19,20 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	"time"
 
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/aws/aws-sdk-go/service/iam/iamiface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateInstanceprofile struct {
 	_      string `action:"create" entity:"instanceprofile" awsAPI:"iam" awsCall:"CreateInstanceProfile" awsInput:"iam.CreateInstanceProfileInput" awsOutput:"iam.CreateInstanceProfileOutput"`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    iamiface.IAMAPI
 	Name   *string `awsName:"InstanceProfileName" awsType:"awsstr" templateName:"name" required:""`
 }
@@ -43,7 +44,7 @@ func (cmd *CreateInstanceprofile) ValidateParams(params []string) ([]string, err
 type DeleteInstanceprofile struct {
 	_      string `action:"delete" entity:"instanceprofile" awsAPI:"iam" awsCall:"DeleteInstanceProfile" awsInput:"iam.DeleteInstanceProfileInput" awsOutput:"iam.DeleteInstanceProfileOutput"`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    iamiface.IAMAPI
 	Name   *string `awsName:"InstanceProfileName" awsType:"awsstr" templateName:"name" required:""`
 }
@@ -55,7 +56,7 @@ func (cmd *DeleteInstanceprofile) ValidateParams(params []string) ([]string, err
 type AttachInstanceprofile struct {
 	_        string `action:"attach" entity:"instanceprofile" awsAPI:"ec2" awsDryRun:"manual"`
 	logger   *logger.Logger
-	graph    *graph.Graph
+	graph    cloudgraph.GraphAPI
 	api      ec2iface.EC2API
 	Instance *string `awsName:"InstanceId" awsType:"awsstr" templateName:"instance" required:""`
 	Name     *string `awsName:"IamInstanceProfile.Name" awsType:"awsstr" templateName:"name" required:""`
@@ -149,7 +150,7 @@ func (cmd *AttachInstanceprofile) ManualRun(ctx map[string]interface{}) (interfa
 type DetachInstanceprofile struct {
 	_        string `action:"detach" entity:"instanceprofile" awsAPI:"ec2"`
 	logger   *logger.Logger
-	graph    *graph.Graph
+	graph    cloudgraph.GraphAPI
 	api      ec2iface.EC2API
 	Instance *string `templateName:"instance" required:""`
 	Name     *string `templateName:"name" required:""`

@@ -59,7 +59,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
 	"github.com/wallix/awless/cloud/graph"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
@@ -72,9 +71,6 @@ func NewAttachAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -157,9 +153,6 @@ func NewAttachContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ecs.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -240,9 +233,6 @@ func NewAttachElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -352,9 +342,6 @@ func NewAttachInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -442,9 +429,6 @@ func NewAttachInstanceprofile(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -521,9 +505,6 @@ func NewAttachInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -633,9 +614,6 @@ func NewAttachMfadevice(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -722,9 +700,6 @@ func NewAttachNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -834,9 +809,6 @@ func NewAttachPolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -917,9 +889,6 @@ func NewAttachRole(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1007,9 +976,6 @@ func NewAttachRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1119,9 +1085,6 @@ func NewAttachSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -1202,9 +1165,6 @@ func NewAttachUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1292,9 +1252,6 @@ func NewAttachVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1404,9 +1361,6 @@ func NewAuthenticateRegistry(sess *session.Session, g cloudgraph.GraphAPI, l ...
 	if sess != nil {
 		cmd.api = ecr.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -1487,9 +1441,6 @@ func NewCheckCertificate(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = acm.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1572,9 +1523,6 @@ func NewCheckDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	if sess != nil {
 		cmd.api = rds.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -1655,9 +1603,6 @@ func NewCheckDistribution(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	}
 	if sess != nil {
 		cmd.api = cloudfront.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1740,9 +1685,6 @@ func NewCheckInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -1823,9 +1765,6 @@ func NewCheckLoadbalancer(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -1908,9 +1847,6 @@ func NewCheckNatgateway(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -1991,9 +1927,6 @@ func NewCheckNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -2076,9 +2009,6 @@ func NewCheckScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -2159,9 +2089,6 @@ func NewCheckSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -2244,9 +2171,6 @@ func NewCheckVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -2327,9 +2251,6 @@ func NewCopyImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -2439,9 +2360,6 @@ func NewCopySnapshot(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -2550,9 +2468,6 @@ func NewCreateAccesskey(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -2639,9 +2554,6 @@ func NewCreateAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -2730,9 +2642,6 @@ func NewCreateAppscalingpolicy(sess *session.Session, g cloudgraph.GraphAPI, l .
 	if sess != nil {
 		cmd.api = applicationautoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -2819,9 +2728,6 @@ func NewCreateAppscalingtarget(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = applicationautoscaling.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -2910,9 +2816,6 @@ func NewCreateBucket(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = s3.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3000,9 +2903,6 @@ func NewCreateCertificate(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	if sess != nil {
 		cmd.api = acm.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3083,9 +2983,6 @@ func NewCreateContainercluster(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = ecs.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -3174,9 +3071,6 @@ func NewCreateDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = rds.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3257,9 +3151,6 @@ func NewCreateDbsubnetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	}
 	if sess != nil {
 		cmd.api = rds.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -3348,9 +3239,6 @@ func NewCreateDistribution(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = cloudfront.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3431,9 +3319,6 @@ func NewCreateElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -3543,9 +3428,6 @@ func NewCreateFunction(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = lambda.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3633,9 +3515,6 @@ func NewCreateGroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3722,9 +3601,6 @@ func NewCreateImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -3834,9 +3710,6 @@ func NewCreateInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -3945,9 +3818,6 @@ func NewCreateInstanceprofile(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4034,9 +3904,6 @@ func NewCreateInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -4146,9 +4013,6 @@ func NewCreateKeypair(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4235,9 +4099,6 @@ func NewCreateLaunchconfiguration(sess *session.Session, g cloudgraph.GraphAPI, 
 	}
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -4326,9 +4187,6 @@ func NewCreateListener(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4415,9 +4273,6 @@ func NewCreateLoadbalancer(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -4506,9 +4361,6 @@ func NewCreateLoginprofile(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4596,9 +4448,6 @@ func NewCreateMfadevice(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4679,9 +4528,6 @@ func NewCreateNatgateway(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -4769,9 +4615,6 @@ func NewCreateNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -4881,9 +4724,6 @@ func NewCreatePolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -4970,9 +4810,6 @@ func NewCreateQueue(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = sqs.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -5061,9 +4898,6 @@ func NewCreateRecord(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = route53.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -5144,9 +4978,6 @@ func NewCreateRepository(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = ecr.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -5235,9 +5066,6 @@ func NewCreateRole(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -5318,9 +5146,6 @@ func NewCreateRoute(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -5430,9 +5255,6 @@ func NewCreateRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -5541,9 +5363,6 @@ func NewCreateS3object(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = s3.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -5624,9 +5443,6 @@ func NewCreateScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	}
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -5715,9 +5531,6 @@ func NewCreateScalingpolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -5804,9 +5617,6 @@ func NewCreateSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -5916,9 +5726,6 @@ func NewCreateSnapshot(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6027,9 +5834,6 @@ func NewCreateStack(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = cloudformation.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6116,9 +5920,6 @@ func NewCreateSubnet(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -6228,9 +6029,6 @@ func NewCreateSubscription(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = sns.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6318,9 +6116,6 @@ func NewCreateTag(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6397,9 +6192,6 @@ func NewCreateTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -6488,9 +6280,6 @@ func NewCreateTopic(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = sns.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6578,9 +6367,6 @@ func NewCreateUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6667,9 +6453,6 @@ func NewCreateVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -6779,9 +6562,6 @@ func NewCreateVpc(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6890,9 +6670,6 @@ func NewCreateZone(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = route53.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -6979,9 +6756,6 @@ func NewDeleteAccesskey(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -7070,9 +6844,6 @@ func NewDeleteAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7159,9 +6930,6 @@ func NewDeleteAppscalingpolicy(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = applicationautoscaling.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -7250,9 +7018,6 @@ func NewDeleteAppscalingtarget(sess *session.Session, g cloudgraph.GraphAPI, l .
 	if sess != nil {
 		cmd.api = applicationautoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7339,9 +7104,6 @@ func NewDeleteBucket(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = s3.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -7430,9 +7192,6 @@ func NewDeleteCertificate(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	if sess != nil {
 		cmd.api = acm.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7519,9 +7278,6 @@ func NewDeleteContainercluster(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = ecs.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -7610,9 +7366,6 @@ func NewDeleteContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ecs.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7689,9 +7442,6 @@ func NewDeleteDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	}
 	if sess != nil {
 		cmd.api = rds.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -7780,9 +7530,6 @@ func NewDeleteDbsubnetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = rds.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7870,9 +7617,6 @@ func NewDeleteDistribution(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = cloudfront.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -7953,9 +7697,6 @@ func NewDeleteElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -8065,9 +7806,6 @@ func NewDeleteFunction(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = lambda.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -8154,9 +7892,6 @@ func NewDeleteGroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -8245,9 +7980,6 @@ func NewDeleteImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -8324,9 +8056,6 @@ func NewDeleteInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -8436,9 +8165,6 @@ func NewDeleteInstanceprofile(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -8525,9 +8251,6 @@ func NewDeleteInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -8637,9 +8360,6 @@ func NewDeleteKeypair(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -8748,9 +8468,6 @@ func NewDeleteLaunchconfiguration(sess *session.Session, g cloudgraph.GraphAPI, 
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -8837,9 +8554,6 @@ func NewDeleteListener(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -8928,9 +8642,6 @@ func NewDeleteLoadbalancer(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9017,9 +8728,6 @@ func NewDeleteLoginprofile(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -9108,9 +8816,6 @@ func NewDeleteMfadevice(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9198,9 +8903,6 @@ func NewDeleteNatgateway(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9287,9 +8989,6 @@ func NewDeleteNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -9399,9 +9098,6 @@ func NewDeletePolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9488,9 +9184,6 @@ func NewDeleteQueue(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = sqs.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -9579,9 +9272,6 @@ func NewDeleteRecord(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = route53.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9662,9 +9352,6 @@ func NewDeleteRepository(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = ecr.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -9753,9 +9440,6 @@ func NewDeleteRole(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -9836,9 +9520,6 @@ func NewDeleteRoute(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -9948,9 +9629,6 @@ func NewDeleteRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10059,9 +9737,6 @@ func NewDeleteS3object(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = s3.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10148,9 +9823,6 @@ func NewDeleteScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	}
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -10239,9 +9911,6 @@ func NewDeleteScalingpolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10328,9 +9997,6 @@ func NewDeleteSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -10440,9 +10106,6 @@ func NewDeleteSnapshot(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10551,9 +10214,6 @@ func NewDeleteStack(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = cloudformation.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10640,9 +10300,6 @@ func NewDeleteSubnet(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -10752,9 +10409,6 @@ func NewDeleteSubscription(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = sns.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10842,9 +10496,6 @@ func NewDeleteTag(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -10921,9 +10572,6 @@ func NewDeleteTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -11012,9 +10660,6 @@ func NewDeleteTopic(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = sns.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11102,9 +10747,6 @@ func NewDeleteUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11191,9 +10833,6 @@ func NewDeleteVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -11303,9 +10942,6 @@ func NewDeleteVpc(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11414,9 +11050,6 @@ func NewDeleteZone(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = route53.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11504,9 +11137,6 @@ func NewDetachAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11588,9 +11218,6 @@ func NewDetachContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ecs.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11671,9 +11298,6 @@ func NewDetachElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -11783,9 +11407,6 @@ func NewDetachInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11873,9 +11494,6 @@ func NewDetachInstanceprofile(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -11956,9 +11574,6 @@ func NewDetachInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12068,9 +11683,6 @@ func NewDetachMfadevice(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -12158,9 +11770,6 @@ func NewDetachNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -12237,9 +11846,6 @@ func NewDetachPolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12321,9 +11927,6 @@ func NewDetachRole(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12411,9 +12014,6 @@ func NewDetachRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12523,9 +12123,6 @@ func NewDetachSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -12606,9 +12203,6 @@ func NewDetachUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12696,9 +12290,6 @@ func NewDetachVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -12808,9 +12399,6 @@ func NewImportImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -12919,9 +12507,6 @@ func NewStartAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13009,9 +12594,6 @@ func NewStartContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = ecs.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13092,9 +12674,6 @@ func NewStartDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	}
 	if sess != nil {
 		cmd.api = rds.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -13182,9 +12761,6 @@ func NewStartInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -13294,9 +12870,6 @@ func NewStopAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 	if sess != nil {
 		cmd.api = cloudwatch.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13384,9 +12957,6 @@ func NewStopContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	if sess != nil {
 		cmd.api = ecs.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13467,9 +13037,6 @@ func NewStopDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = rds.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -13557,9 +13124,6 @@ func NewStopInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -13669,9 +13233,6 @@ func NewUpdateBucket(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = s3.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13752,9 +13313,6 @@ func NewUpdateContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	}
 	if sess != nil {
 		cmd.api = ecs.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -13843,9 +13401,6 @@ func NewUpdateDistribution(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = cloudfront.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -13927,9 +13482,6 @@ func NewUpdateImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14006,9 +13558,6 @@ func NewUpdateInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	}
 	if sess != nil {
 		cmd.api = ec2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -14118,9 +13667,6 @@ func NewUpdateLoginprofile(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = iam.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14207,9 +13753,6 @@ func NewUpdatePolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	}
 	if sess != nil {
 		cmd.api = iam.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -14298,9 +13841,6 @@ func NewUpdateRecord(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = route53.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14381,9 +13921,6 @@ func NewUpdateS3object(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 	}
 	if sess != nil {
 		cmd.api = s3.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -14472,9 +14009,6 @@ func NewUpdateScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 	if sess != nil {
 		cmd.api = autoscaling.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14562,9 +14096,6 @@ func NewUpdateSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14641,9 +14172,6 @@ func NewUpdateStack(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 	}
 	if sess != nil {
 		cmd.api = cloudformation.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd
@@ -14732,9 +14260,6 @@ func NewUpdateSubnet(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 	if sess != nil {
 		cmd.api = ec2.New(sess)
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	cmd.graph = g
 	return cmd
 }
@@ -14821,9 +14346,6 @@ func NewUpdateTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 	}
 	if sess != nil {
 		cmd.api = elbv2.New(sess)
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	cmd.graph = g
 	return cmd

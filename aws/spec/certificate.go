@@ -20,18 +20,19 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/acm"
 	"github.com/aws/aws-sdk-go/service/acm/acmiface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateCertificate struct {
 	_                 string `action:"create" entity:"certificate" awsAPI:"acm"`
 	logger            *logger.Logger
-	graph             *graph.Graph
+	graph             cloudgraph.GraphAPI
 	api               acmiface.ACMAPI
 	Domains           []*string `templateName:"domains" required:""`
 	ValidationDomains []*string `templateName:"validation-domains"`
@@ -104,7 +105,7 @@ func (cmd *CreateCertificate) ExtractResult(i interface{}) string {
 type DeleteCertificate struct {
 	_      string `action:"delete" entity:"certificate" awsAPI:"acm" awsCall:"DeleteCertificate" awsInput:"acm.DeleteCertificateInput" awsOutput:"acm.DeleteCertificateOutput"`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    acmiface.ACMAPI
 	Arn    *string `awsName:"CertificateArn" awsType:"awsstr" templateName:"arn" required:""`
 }
@@ -116,7 +117,7 @@ func (cmd *DeleteCertificate) ValidateParams(params []string) ([]string, error) 
 type CheckCertificate struct {
 	_       string `action:"check" entity:"certificate" awsAPI:"acm"`
 	logger  *logger.Logger
-	graph   *graph.Graph
+	graph   cloudgraph.GraphAPI
 	api     acmiface.ACMAPI
 	Arn     *string `templateName:"arn" required:""`
 	State   *string `templateName:"state" required:""`

@@ -28,17 +28,18 @@ import (
 	"strings"
 	"time"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/iam"
 	"github.com/aws/aws-sdk-go/service/iam/iamiface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreatePolicy struct {
 	_           string `action:"create" entity:"policy" awsAPI:"iam" awsCall:"CreatePolicy" awsInput:"iam.CreatePolicyInput" awsOutput:"iam.CreatePolicyOutput"`
 	logger      *logger.Logger
-	graph       *graph.Graph
+	graph       cloudgraph.GraphAPI
 	api         iamiface.IAMAPI
 	Name        *string   `awsName:"PolicyName" awsType:"awsstr" templateName:"name" required:""`
 	Effect      *string   `templateName:"effect" required:""`
@@ -79,7 +80,7 @@ func (cmd *CreatePolicy) ExtractResult(i interface{}) string {
 type UpdatePolicy struct {
 	_              string `action:"update" entity:"policy" awsAPI:"iam" awsCall:"CreatePolicyVersion" awsInput:"iam.CreatePolicyVersionInput" awsOutput:"iam.CreatePolicyVersionOutput"`
 	logger         *logger.Logger
-	graph          *graph.Graph
+	graph          cloudgraph.GraphAPI
 	api            iamiface.IAMAPI
 	Arn            *string   `awsName:"PolicyArn" awsType:"awsstr" templateName:"arn" required:""`
 	Effect         *string   `templateName:"effect" required:""`
@@ -164,7 +165,7 @@ func (cmd *UpdatePolicy) getPolicyLastVersionDocument(arn *string) (string, erro
 type DeletePolicy struct {
 	_           string `action:"delete" entity:"policy" awsAPI:"iam"  awsCall:"DeletePolicy" awsInput:"iam.DeletePolicyInput" awsOutput:"iam.DeletePolicyOutput"`
 	logger      *logger.Logger
-	graph       *graph.Graph
+	graph       cloudgraph.GraphAPI
 	api         iamiface.IAMAPI
 	Arn         *string `awsName:"PolicyArn" awsType:"awsstr" templateName:"arn" required:""`
 	AllVersions *bool   `templateName:"all-versions"`
@@ -195,7 +196,7 @@ func (cmd *DeletePolicy) BeforeRun(ctx map[string]interface{}) error {
 type AttachPolicy struct {
 	_       string `action:"attach" entity:"policy" awsAPI:"iam"`
 	logger  *logger.Logger
-	graph   *graph.Graph
+	graph   cloudgraph.GraphAPI
 	api     iamiface.IAMAPI
 	Arn     *string `awsName:"PolicyArn" awsType:"awsstr" templateName:"arn"`
 	User    *string `awsName:"UserName" awsType:"awsstr" templateName:"user"`
@@ -261,7 +262,7 @@ func (cmd *AttachPolicy) ManualRun(ctx map[string]interface{}) (interface{}, err
 type DetachPolicy struct {
 	_      string `action:"detach" entity:"policy" awsAPI:"iam"`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    iamiface.IAMAPI
 	Arn    *string `awsName:"PolicyArn" awsType:"awsstr" templateName:"arn"`
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user"`

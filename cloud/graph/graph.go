@@ -23,7 +23,7 @@ type GraphAPI interface {
 type Resource interface {
 	Type() string
 	Id() string
-	Property(string) interface{}
+	Property(string) (interface{}, bool)
 	Relations(string) []Resource
 }
 

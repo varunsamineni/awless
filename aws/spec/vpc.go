@@ -18,17 +18,18 @@ package awsspec
 import (
 	"net"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateVpc struct {
 	_      string `action:"create" entity:"vpc" awsAPI:"ec2" awsCall:"CreateVpc" awsInput:"ec2.CreateVpcInput" awsOutput:"ec2.CreateVpcOutput" awsDryRun:""`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
 	CIDR   *string `awsName:"CidrBlock" awsType:"awsstr" templateName:"cidr" required:""`
 	Name   *string `awsName:"Name" templateName:"name"`
@@ -54,7 +55,7 @@ func (cmd *CreateVpc) AfterRun(ctx map[string]interface{}, output interface{}) e
 type DeleteVpc struct {
 	_      string `action:"delete" entity:"vpc" awsAPI:"ec2" awsCall:"DeleteVpc" awsInput:"ec2.DeleteVpcInput" awsOutput:"ec2.DeleteVpcOutput" awsDryRun:""`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
 	Id     *string `awsName:"VpcId" awsType:"awsstr" templateName:"id" required:""`
 }

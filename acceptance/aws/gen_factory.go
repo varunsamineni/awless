@@ -37,7 +37,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
 	"github.com/wallix/awless/aws/spec"
 	"github.com/wallix/awless/cloud/graph"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
@@ -51,9 +50,6 @@ func NewAcceptanceFactory(mock interface{}, g cloudgraph.GraphAPI, l ...*logger.
 	logger := logger.DiscardLogger
 	if len(l) > 0 {
 		logger = l[0]
-	}
-	if g == nil {
-		g = graph.NewGraph()
 	}
 	return &AcceptanceFactory{Mock: mock, Graph: g, Logger: logger}
 }

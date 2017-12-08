@@ -239,9 +239,6 @@ func NewAcceptanceFactory(mock interface{}, g cloudgraph.GraphAPI, l ...*logger.
 	if len(l) > 0 {
 		logger = l[0]
 	}
-	if g == nil {
-		g = graph.NewGraph()
-	}
 	return &AcceptanceFactory{Mock: mock, Graph:g, Logger: logger}
 }
 

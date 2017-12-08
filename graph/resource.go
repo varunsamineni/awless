@@ -123,8 +123,9 @@ func (res *Resource) Properties() map[string]interface{} {
 	return res.properties
 }
 
-func (res *Resource) Property(k string) interface{} {
-	return res.properties[k]
+func (res *Resource) Property(k string) (interface{}, bool) {
+	v, ok := res.properties[k]
+	return v, ok
 }
 
 func (res *Resource) SetProperty(k string, v interface{}) {

@@ -18,15 +18,16 @@ package awsspec
 import (
 	"net"
 
+	"github.com/wallix/awless/cloud/graph"
+
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
-	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
 
 type CreateRoute struct {
 	_       string `action:"create" entity:"route" awsAPI:"ec2" awsCall:"CreateRoute" awsInput:"ec2.CreateRouteInput" awsOutput:"ec2.CreateRouteOutput" awsDryRun:""`
 	logger  *logger.Logger
-	graph   *graph.Graph
+	graph   cloudgraph.GraphAPI
 	api     ec2iface.EC2API
 	Table   *string `awsName:"RouteTableId" awsType:"awsstr" templateName:"table" required:""`
 	CIDR    *string `awsName:"DestinationCidrBlock" awsType:"awsstr" templateName:"cidr" required:""`
@@ -45,7 +46,7 @@ func (cmd *CreateRoute) Validate_CIDR() error {
 type DeleteRoute struct {
 	_      string `action:"delete" entity:"route" awsAPI:"ec2" awsCall:"DeleteRoute" awsInput:"ec2.DeleteRouteInput" awsOutput:"ec2.DeleteRouteOutput" awsDryRun:""`
 	logger *logger.Logger
-	graph  *graph.Graph
+	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
 	Table  *string `awsName:"RouteTableId" awsType:"awsstr" templateName:"table" required:""`
 	CIDR   *string `awsName:"DestinationCidrBlock" awsType:"awsstr" templateName:"cidr" required:""`
