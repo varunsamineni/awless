@@ -16,10 +16,6 @@ import (
 )
 
 func NewRunner(tpl *template.Template, msg, tplPath string, fillers ...map[string]interface{}) *template.Runner {
-	g, err := sync.LoadLocalGraphs(config.GetAWSRegion())
-	if awsFactory, ok := awsspec.CommandFactory.(*awsspec.AWSFactory); err == nil && g != nil && ok {
-		awsFactory.Graph = g
-	}
 	runner := &template.Runner{}
 
 	runner.Template = tpl
