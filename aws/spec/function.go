@@ -42,10 +42,6 @@ type CreateFunction struct {
 	Timeout       *int64  `awsName:"Timeout" awsType:"awsint64" templateName:"timeout"`
 }
 
-func (cmd *CreateFunction) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateFunction) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*lambda.FunctionConfiguration).FunctionArn)
 }

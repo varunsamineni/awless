@@ -76,7 +76,6 @@ type validParamTestStruct struct {
 
 func (*validParamTestStruct) ParamsHelp() string                                       { return "" }
 func (*validParamTestStruct) Params() params.Rule                                      { return nil }
-func (*validParamTestStruct) ValidateParams([]string) ([]string, error)                { return nil, nil }
 func (*validParamTestStruct) ValidateCommand(map[string]interface{}, []string) []error { return nil }
 func (*validParamTestStruct) inject(params map[string]interface{}) error               { return nil }
 func (*validParamTestStruct) Run(ctx map[string]interface{}, params map[string]interface{}) (interface{}, error) {

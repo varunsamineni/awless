@@ -33,10 +33,6 @@ type CreateSubscription struct {
 	Protocol *string `awsName:"Protocol" awsType:"awsstr" templateName:"protocol" required:""`
 }
 
-func (cmd *CreateSubscription) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateSubscription) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*sns.SubscribeOutput).SubscriptionArn)
 }

@@ -36,10 +36,6 @@ type CreateVolume struct {
 	Size             *int64  `awsName:"Size" awsType:"awsint64" templateName:"size" required:""`
 }
 
-func (cmd *CreateVolume) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateVolume) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.Volume).VolumeId)
 }

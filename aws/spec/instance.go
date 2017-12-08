@@ -57,13 +57,6 @@ func (cmd *CreateInstance) Params() params.Rule {
 	)
 }
 
-func (cmd *CreateInstance) ValidateParams(params []string) ([]string, error) {
-	return paramRule{
-		tree:   allOf(oneOf(node("distro"), node("image")), node("count"), node("type"), node("name"), node("subnet")),
-		extras: []string{"keypair", "ip", "userdata", "securitygroup", "lock", "role"},
-	}.verify(params)
-}
-
 func (cmd *CreateInstance) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
 	return []string{"distro"}, cmd.convertDistroToAMI
 }

@@ -36,10 +36,6 @@ type CreateZone struct {
 	Vpcregion       *string `awsName:"VPC.VPCRegion" awsType:"awsstr" templateName:"vpcregion"`
 }
 
-func (cmd *CreateZone) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateZone) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*route53.CreateHostedZoneOutput).HostedZone.Id)
 }

@@ -38,7 +38,6 @@ type ResultExtractor interface {
 type command interface {
 	ParamsHelp() string
 	Params() params.Rule
-	ValidateParams([]string) ([]string, error)
 	ValidateCommand(map[string]interface{}, []string) []error
 	inject(params map[string]interface{}) error
 	Run(ctx map[string]interface{}, params map[string]interface{}) (interface{}, error)

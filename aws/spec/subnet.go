@@ -46,10 +46,6 @@ func (cmd *CreateSubnet) Params() params.Rule {
 	)
 }
 
-func (cmd *CreateSubnet) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateSubnet) Validate_CIDR() error {
 	_, _, err := net.ParseCIDR(StringValue(cmd.CIDR))
 	return err

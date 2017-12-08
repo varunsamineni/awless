@@ -37,10 +37,6 @@ type CreateNatgateway struct {
 	Subnet      *string `awsName:"SubnetId" awsType:"awsstr" templateName:"subnet" required:""`
 }
 
-func (cmd *CreateNatgateway) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateNatgateway) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.CreateNatGatewayOutput).NatGateway.NatGatewayId)
 }

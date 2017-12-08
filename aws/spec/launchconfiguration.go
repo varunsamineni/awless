@@ -38,13 +38,6 @@ type CreateLaunchconfiguration struct {
 	DistroQuery    *string   `awsType:"awsstr" templateName:"distro"`
 }
 
-func (cmd *CreateLaunchconfiguration) ValidateParams(params []string) ([]string, error) {
-	return paramRule{
-		tree:   allOf(oneOf(node("distro"), node("image")), node("type"), node("name")),
-		extras: []string{"public", "keypair", "userdata", "securitygroups", "role", "spotprice"},
-	}.verify(params)
-}
-
 func (cmd *CreateLaunchconfiguration) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
 	createInstance := CommandFactory.Build("createinstance")().(*CreateInstance)
 	return []string{"distro"}, createInstance.convertDistroToAMI

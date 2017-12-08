@@ -33,10 +33,6 @@ type CreateLoginprofile struct {
 	PasswordReset *bool   `awsName:"PasswordResetRequired" awsType:"awsbool" templateName:"password-reset"`
 }
 
-func (cmd *CreateLoginprofile) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateLoginprofile) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*iam.CreateLoginProfileOutput).LoginProfile.UserName)
 }

@@ -32,10 +32,6 @@ type CreateElasticip struct {
 	Domain *string `awsName:"Domain" awsType:"awsstr" templateName:"domain" required:""`
 }
 
-func (cmd *CreateElasticip) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateElasticip) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.AllocateAddressOutput).AllocationId)
 }

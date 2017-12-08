@@ -51,10 +51,6 @@ type CreatePolicy struct {
 	Conditions  []*string `templateName:"conditions"`
 }
 
-func (cmd *CreatePolicy) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreatePolicy) BeforeRun(ctx map[string]interface{}) error {
 	stat, err := buildStatementFromParams(cmd.Effect, cmd.Resource, cmd.Action, cmd.Conditions)
 	if err != nil {

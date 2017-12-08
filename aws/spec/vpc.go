@@ -35,10 +35,6 @@ type CreateVpc struct {
 	Name   *string `awsName:"Name" templateName:"name"`
 }
 
-func (cmd *CreateVpc) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateVpc) Validate_CIDR() error {
 	_, _, err := net.ParseCIDR(StringValue(cmd.CIDR))
 	return err

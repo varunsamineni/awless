@@ -37,10 +37,6 @@ type CreateInstanceprofile struct {
 	Name   *string `awsName:"InstanceProfileName" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateInstanceprofile) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 type DeleteInstanceprofile struct {
 	_      string `action:"delete" entity:"instanceprofile" awsAPI:"iam" awsCall:"DeleteInstanceProfile" awsInput:"iam.DeleteInstanceProfileInput" awsOutput:"iam.DeleteInstanceProfileOutput"`
 	logger *logger.Logger

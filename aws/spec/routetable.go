@@ -31,10 +31,6 @@ type CreateRoutetable struct {
 	Vpc    *string `awsName:"VpcId" awsType:"awsstr" templateName:"vpc" required:""`
 }
 
-func (cmd *CreateRoutetable) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateRoutetable) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.CreateRouteTableOutput).RouteTable.RouteTableId)
 }

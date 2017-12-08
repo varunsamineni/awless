@@ -34,10 +34,6 @@ type CreateAppscalingtarget struct {
 	ServiceNamespace *string `awsName:"ServiceNamespace" awsType:"awsstr" templateName:"service-namespace" required:""`
 }
 
-func (cmd *CreateAppscalingtarget) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 type DeleteAppscalingtarget struct {
 	_                string `action:"delete" entity:"appscalingtarget" awsAPI:"applicationautoscaling" awsCall:"DeregisterScalableTarget" awsInput:"applicationautoscaling.DeregisterScalableTargetInput" awsOutput:"applicationautoscaling.DeregisterScalableTargetOutput"`
 	logger           *logger.Logger

@@ -34,10 +34,6 @@ type CreateRoute struct {
 	Gateway *string `awsName:"GatewayId" awsType:"awsstr" templateName:"gateway" required:""`
 }
 
-func (cmd *CreateRoute) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateRoute) Validate_CIDR() error {
 	_, _, err := net.ParseCIDR(StringValue(cmd.CIDR))
 	return err

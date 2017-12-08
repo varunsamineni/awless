@@ -33,10 +33,6 @@ type CreateDbsubnetgroup struct {
 	Subnets     []*string `awsName:"SubnetIds" awsType:"awsstringslice" templateName:"subnets" required:""`
 }
 
-func (cmd *CreateDbsubnetgroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateDbsubnetgroup) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*rds.CreateDBSubnetGroupOutput).DBSubnetGroup.DBSubnetGroupName)
 }

@@ -42,10 +42,6 @@ type CreateNetworkinterface struct {
 	Privateip      *string   `awsName:"PrivateIpAddress" awsType:"awsstr" templateName:"privateip"`
 }
 
-func (cmd *CreateNetworkinterface) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateNetworkinterface) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.CreateNetworkInterfaceOutput).NetworkInterface.NetworkInterfaceId)
 }

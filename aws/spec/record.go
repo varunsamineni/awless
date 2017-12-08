@@ -38,10 +38,6 @@ type CreateRecord struct {
 	Comment *string `templateName:"comment"`
 }
 
-func (cmd *CreateRecord) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateRecord) ManualRun(ctx map[string]interface{}) (interface{}, error) {
 	start := time.Now()
 	output, err := changeResourceRecordSets(cmd.api, String("CREATE"), cmd.Zone, cmd.Name, cmd.Type, cmd.Value, cmd.Comment, cmd.Ttl)

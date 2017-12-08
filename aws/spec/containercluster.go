@@ -31,10 +31,6 @@ type CreateContainercluster struct {
 	Name   *string `awsName:"ClusterName" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateContainercluster) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateContainercluster) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ecs.CreateClusterOutput).Cluster.ClusterArn)
 }

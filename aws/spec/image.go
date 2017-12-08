@@ -42,10 +42,6 @@ type CreateImage struct {
 	Description *string `awsName:"Description" awsType:"awsstr" templateName:"description"`
 }
 
-func (cmd *CreateImage) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateImage) Validate_Name() (err error) {
 	if name := cmd.Name; name != nil {
 		if len(*name) < 3 {

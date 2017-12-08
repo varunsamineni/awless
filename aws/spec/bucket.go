@@ -35,10 +35,6 @@ type CreateBucket struct {
 	Acl    *string `awsName:"ACL" awsType:"awsstr" templateName:"acl"`
 }
 
-func (cmd *CreateBucket) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateBucket) ExtractResult(i interface{}) string {
 	return StringValue(cmd.Name)
 }

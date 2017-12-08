@@ -54,10 +54,6 @@ type CreateStack struct {
 	StackFile       *string   `templateName:"stack-file"`
 }
 
-func (cmd *CreateStack) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateStack) Validate_TemplateFile() error {
 	if _, err := os.Stat(StringValue(cmd.TemplateFile)); err != nil {
 		return errors.New(strings.TrimLeft(err.Error(), "stat "))

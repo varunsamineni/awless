@@ -49,10 +49,6 @@ type CreateAlarm struct {
 	Unit                    *string   `awsName:"Unit" awsType:"awsstr" templateName:"unit"`
 }
 
-func (cmd *CreateAlarm) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateAlarm) Validate_Operator() error {
 	return NewEnumValidator("GreaterThanThreshold", "LessThanThreshold", "LessThanOrEqualToThreshold", "GreaterThanOrEqualToThreshold").Validate(cmd.Operator)
 }

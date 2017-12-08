@@ -40,10 +40,6 @@ type CreateAppscalingpolicy struct {
 	StepscalingMinAdjustmentMagnitude *int64    `awsName:"StepScalingPolicyConfiguration.MinAdjustmentMagnitude" awsType:"awsint64" templateName:"stepscaling-min-adjustment-magnitude"`
 }
 
-func (cmd *CreateAppscalingpolicy) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateAppscalingpolicy) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*applicationautoscaling.PutScalingPolicyOutput).PolicyARN)
 }

@@ -31,10 +31,6 @@ type CreateRepository struct {
 	Name   *string `awsName:"RepositoryName" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateRepository) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateRepository) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ecr.CreateRepositoryOutput).Repository.RepositoryArn)
 }

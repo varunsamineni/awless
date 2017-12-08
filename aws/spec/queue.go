@@ -38,10 +38,6 @@ type CreateQueue struct {
 	VisibilityTimeout *string `awsName:"Attributes[VisibilityTimeout]" awsType:"awsstringpointermap" templateName:"visibility-timeout"`
 }
 
-func (cmd *CreateQueue) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateQueue) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*sqs.CreateQueueOutput).QueueUrl)
 }

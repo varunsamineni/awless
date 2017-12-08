@@ -31,10 +31,6 @@ type CreateGroup struct {
 	Name   *string `awsName:"GroupName" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateGroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateGroup) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*iam.CreateGroupOutput).Group.GroupId)
 }

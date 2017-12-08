@@ -42,10 +42,6 @@ type CreateSecuritygroup struct {
 	Description *string `awsName:"Description" awsType:"awsstr" templateName:"description" required:""`
 }
 
-func (cmd *CreateSecuritygroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateSecuritygroup) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.CreateSecurityGroupOutput).GroupId)
 }

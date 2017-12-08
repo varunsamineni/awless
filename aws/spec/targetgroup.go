@@ -44,10 +44,6 @@ type CreateTargetgroup struct {
 	Matcher             *string `awsName:"Matcher.HttpCode" awsType:"awsstr" templateName:"matcher"`
 }
 
-func (cmd *CreateTargetgroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateTargetgroup) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*elbv2.CreateTargetGroupOutput).TargetGroups[0].TargetGroupArn)
 }

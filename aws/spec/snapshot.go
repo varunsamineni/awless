@@ -32,10 +32,6 @@ type CreateSnapshot struct {
 	Description *string `awsName:"Description" awsType:"awsstr" templateName:"description"`
 }
 
-func (cmd *CreateSnapshot) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateSnapshot) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.Snapshot).SnapshotId)
 }

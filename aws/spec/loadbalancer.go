@@ -50,10 +50,6 @@ func (cmd *CreateLoadbalancer) Params() params.Rule {
 	)
 }
 
-func (cmd *CreateLoadbalancer) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateLoadbalancer) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*elbv2.CreateLoadBalancerOutput).LoadBalancers[0].LoadBalancerArn)
 }

@@ -46,10 +46,6 @@ type StartContainertask struct {
 	LoadBalancerTargetgroup   *string `templateName:"loadbalancer.targetgroup"`
 }
 
-func (cmd *StartContainertask) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *StartContainertask) Validate_Type() error {
 	if err := NewEnumValidator("task", "service").Validate(cmd.Type); err != nil {
 		return err

@@ -36,10 +36,6 @@ type CreateScalingpolicy struct {
 	AdjustmentMagnitude *int64  `awsName:"MinAdjustmentMagnitude" awsType:"awsint64" templateName:"adjustment-magnitude"`
 }
 
-func (cmd *CreateScalingpolicy) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateScalingpolicy) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*autoscaling.PutScalingPolicyOutput).PolicyARN)
 }

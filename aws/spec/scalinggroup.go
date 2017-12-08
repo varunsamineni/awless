@@ -44,10 +44,6 @@ type CreateScalinggroup struct {
 	Targetgroups           []*string `awsName:"TargetGroupARNs" awsType:"awsstringslice" templateName:"targetgroups"`
 }
 
-func (cmd *CreateScalinggroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateScalinggroup) ExtractResult(i interface{}) string {
 	return StringValue(cmd.Name)
 }

@@ -31,10 +31,6 @@ type CreateTopic struct {
 	Name   *string `awsName:"Name" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateTopic) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateTopic) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*sns.CreateTopicOutput).TopicArn)
 }

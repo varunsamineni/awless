@@ -31,10 +31,6 @@ type CreateUser struct {
 	Name   *string `awsName:"UserName" awsType:"awsstr" templateName:"name" required:""`
 }
 
-func (cmd *CreateUser) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateUser) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*iam.CreateUserOutput).User.UserId)
 }

@@ -44,10 +44,6 @@ type CreateMfadevice struct {
 	Name   *string `templateName:"name" required:""`
 }
 
-func (cmd *CreateMfadevice) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateMfadevice) ManualRun(ctx map[string]interface{}) (interface{}, error) {
 	name := StringValue(cmd.Name)
 	input := &iam.CreateVirtualMFADeviceInput{

@@ -38,10 +38,6 @@ type CreateCertificate struct {
 	ValidationDomains []*string `templateName:"validation-domains"`
 }
 
-func (cmd *CreateCertificate) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateCertificate) ManualRun(ctx map[string]interface{}) (interface{}, error) {
 	input := &acm.RequestCertificateInput{}
 	domains := awssdk.StringValueSlice(cmd.Domains)

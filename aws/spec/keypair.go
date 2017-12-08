@@ -42,10 +42,6 @@ type CreateKeypair struct {
 	PublicKeyMaterial []byte  `awsName:"PublicKeyMaterial" awsType:"awsbyteslice"`
 }
 
-func (cmd *CreateKeypair) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateKeypair) Validate_Name() error {
 	keyDir := os.Getenv(keyDirEnv)
 	if keyDir == "" {

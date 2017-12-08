@@ -89,13 +89,6 @@ func (cmd *CreateDatabase) Params() params.Rule {
 	)
 }
 
-func (cmd *CreateDatabase) ValidateParams(params []string) ([]string, error) {
-	return paramRule{
-		tree:   oneOf(allOf(node("type"), node("id"), node("engine"), node("password"), node("username"), node("size")), allOf(node("replica"), node("replica-source"))),
-		extras: []string{},
-	}.verify(params)
-}
-
 func (cmd *CreateDatabase) Validate_Password() (err error) {
 	if pass := cmd.Password; pass != nil {
 		if len(*pass) < 8 {

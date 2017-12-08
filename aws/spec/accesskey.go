@@ -43,10 +43,6 @@ type CreateAccesskey struct {
 	Save   *bool   `templateName:"save"`
 }
 
-func (cmd *CreateAccesskey) ValidateParams(params []string) ([]string, error) {
-	return paramRule{tree: allOf(node("user")), extras: []string{"save", "no-prompt"}}.verify(params)
-}
-
 func (cmd *CreateAccesskey) ConvertParams() ([]string, func(values map[string]interface{}) (map[string]interface{}, error)) {
 	return []string{"no-prompt"},
 		func(values map[string]interface{}) (map[string]interface{}, error) {

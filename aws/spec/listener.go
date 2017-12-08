@@ -37,10 +37,6 @@ type CreateListener struct {
 	Sslpolicy    *string `awsName:"SslPolicy" awsType:"awsstr" templateName:"sslpolicy"`
 }
 
-func (cmd *CreateListener) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateListener) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*elbv2.CreateListenerOutput).Listeners[0].ListenerArn)
 }

@@ -41,10 +41,6 @@ type CreateS3object struct {
 	Acl    *string `awsName:"ACL" awsType:"awsstr" templateName:"acl"`
 }
 
-func (cmd *CreateS3object) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateS3object) Validate_File() error {
 	filepath := StringValue(cmd.File)
 	stat, err := os.Stat(filepath)

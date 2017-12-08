@@ -46,10 +46,6 @@ func (cmd *AuthenticateRegistry) Params() params.Rule {
 	return params.AtLeastOneOf(params.Key("accounts"), params.Key("no-confirm"), params.Key("no-docker-login"))
 }
 
-func (cmd *AuthenticateRegistry) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *AuthenticateRegistry) ManualRun(ctx map[string]interface{}) (interface{}, error) {
 	input := &ecr.GetAuthorizationTokenInput{}
 	var err error

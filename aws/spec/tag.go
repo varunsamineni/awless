@@ -42,10 +42,6 @@ type CreateTag struct {
 	Value    *string `templateName:"value" required:""`
 }
 
-func (cmd *CreateTag) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateTag) DryRun(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("dry run: cannot set params on command struct: %s", err)

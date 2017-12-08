@@ -35,10 +35,6 @@ func (cmd *CreateInternetgateway) Params() params.Rule {
 	return params.None()
 }
 
-func (cmd *CreateInternetgateway) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 func (cmd *CreateInternetgateway) ExtractResult(i interface{}) string {
 	return awssdk.StringValue(i.(*ec2.CreateInternetGatewayOutput).InternetGateway.InternetGatewayId)
 }

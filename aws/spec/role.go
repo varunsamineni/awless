@@ -39,13 +39,6 @@ type CreateRole struct {
 	SleepAfter       *int64    `templateName:"sleep-after"`
 }
 
-func (cmd *CreateRole) ValidateParams(params []string) ([]string, error) {
-	return paramRule{
-		tree:   allOf(oneOfE(node("principal-account"), node("principal-user"), node("principal-service")), node("name")),
-		extras: []string{"conditions", "sleep-after"},
-	}.verify(params)
-}
-
 func (cmd *CreateRole) ManualRun(ctx map[string]interface{}) (interface{}, error) {
 	princ := new(principal)
 	if cmd.PrincipalAccount != nil {

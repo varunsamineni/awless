@@ -48,10 +48,6 @@ type CreateDistribution struct {
 	MinTtl         *int64    `templateName:"min-ttl"`
 }
 
-func (cmd *CreateDistribution) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 var CallerReferenceFunc = func() string {
 	return fmt.Sprint(time.Now().UTC().Unix())
 }
