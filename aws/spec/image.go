@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -178,6 +179,14 @@ type ImportImage struct {
 	Url          *string `awsName:"DiskContainers[0]Url" awsType:"awsslicestruct" templateName:"url"`
 	Bucket       *string `awsName:"DiskContainers[0]UserBucket.S3Bucket" awsType:"awsslicestruct" templateName:"bucket"`
 	S3object     *string `awsName:"DiskContainers[0]UserBucket.S3Key" awsType:"awsslicestruct" templateName:"s3object"`
+}
+
+func (cmd *ImportImage) Params() params.Rule {
+	return params.OnlyOneOf(
+		params.Key("snapshot"), params.Key("url"),
+		params.AllOf(params.Key("bucket"), params.Key("s3object")),
+		params.Opt("architecture", "description", "license", "platform", "role"),
+	)
 }
 
 func (cmd *ImportImage) ValidateParams(params []string) ([]string, error) {

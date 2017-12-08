@@ -21,6 +21,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateInternetgateway struct {
@@ -28,6 +29,10 @@ type CreateInternetgateway struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
+}
+
+func (cmd *CreateInternetgateway) Params() params.Rule {
+	return params.None()
 }
 
 func (cmd *CreateInternetgateway) ValidateParams(params []string) ([]string, error) {

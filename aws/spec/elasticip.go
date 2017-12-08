@@ -21,6 +21,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ec2/ec2iface"
 	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateElasticip struct {
@@ -46,6 +47,10 @@ type DeleteElasticip struct {
 	api    ec2iface.EC2API
 	Id     *string `awsName:"AllocationId" awsType:"awsstr" templateName:"id"`
 	Ip     *string `awsName:"PublicIp" awsType:"awsstr" templateName:"ip"`
+}
+
+func (cmd *DeleteElasticip) Params() params.Rule {
+	return params.OnlyOneOf(params.Key("id"), params.Key("ip"))
 }
 
 func (cmd *DeleteElasticip) ValidateParams(params []string) ([]string, error) {

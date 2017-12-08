@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ecr"
@@ -39,6 +40,10 @@ type AuthenticateRegistry struct {
 	Accounts         []*string `templateName:"accounts"`
 	NoConfirm        *bool     `templateName:"no-confirm"`
 	DisableDockerCmd *bool     `templateName:"no-docker-login"`
+}
+
+func (cmd *AuthenticateRegistry) Params() params.Rule {
+	return params.AtLeastOneOf(params.Key("accounts"), params.Key("no-confirm"), params.Key("no-docker-login"))
 }
 
 func (cmd *AuthenticateRegistry) ValidateParams(params []string) ([]string, error) {

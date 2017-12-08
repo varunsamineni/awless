@@ -34,8 +34,8 @@ type CreateLoadbalancer struct {
 	logger         *logger.Logger
 	graph          cloudgraph.GraphAPI
 	api            elbv2iface.ELBV2API
-	Name           *string   `awsName:"Name" awsType:"awsstr" templateName:"name" required:""`
-	Subnets        []*string `awsName:"Subnets" awsType:"awsstringslice" templateName:"subnets" required:""`
+	Name           *string   `awsName:"Name" awsType:"awsstr" templateName:"name"`
+	Subnets        []*string `awsName:"Subnets" awsType:"awsstringslice" templateName:"subnets"`
 	SubnetMappings []*string `awsName:"SubnetMappings" awsType:"awssubnetmappings" templateName:"subnet-mappings"`
 	Iptype         *string   `awsName:"IpAddressType" awsType:"awsstr" templateName:"iptype"`
 	Scheme         *string   `awsName:"Scheme" awsType:"awsstr" templateName:"scheme"`

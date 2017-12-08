@@ -471,8 +471,8 @@ var AWSTemplatesDefinitions = map[string]Definition{
 		Action:         "create",
 		Entity:         "instance",
 		Api:            "ec2",
-		RequiredParams: []string{"count", "image", "name", "subnet", "type"},
-		ExtraParams:    []string{"distro", "ip", "keypair", "lock", "role", "securitygroup", "userdata"},
+		RequiredParams: []string{},
+		ExtraParams:    []string{"count", "distro", "image", "ip", "keypair", "lock", "name", "role", "securitygroup", "subnet", "type", "userdata"},
 	},
 	"createinstanceprofile": {
 		Action:         "create",
@@ -513,8 +513,8 @@ var AWSTemplatesDefinitions = map[string]Definition{
 		Action:         "create",
 		Entity:         "loadbalancer",
 		Api:            "elbv2",
-		RequiredParams: []string{"name", "subnets"},
-		ExtraParams:    []string{"iptype", "scheme", "securitygroups", "subnet-mappings", "type"},
+		RequiredParams: []string{},
+		ExtraParams:    []string{"iptype", "name", "scheme", "securitygroups", "subnet-mappings", "subnets", "type"},
 	},
 	"createloginprofile": {
 		Action:         "create",
@@ -639,8 +639,8 @@ var AWSTemplatesDefinitions = map[string]Definition{
 		Action:         "create",
 		Entity:         "subnet",
 		Api:            "ec2",
-		RequiredParams: []string{"cidr", "vpc"},
-		ExtraParams:    []string{"availabilityzone", "name", "public"},
+		RequiredParams: []string{},
+		ExtraParams:    []string{"availabilityzone", "cidr", "name", "public", "vpc"},
 	},
 	"createsubscription": {
 		Action:         "create",
@@ -1283,8 +1283,8 @@ var AWSTemplatesDefinitions = map[string]Definition{
 		Action:         "update",
 		Entity:         "subnet",
 		Api:            "ec2",
-		RequiredParams: []string{"id"},
-		ExtraParams:    []string{"public"},
+		RequiredParams: []string{},
+		ExtraParams:    []string{"id", "public"},
 	},
 	"updatetargetgroup": {
 		Action:         "update",

@@ -25,7 +25,7 @@ func AllOf(rules ...Rule) Rule {
 func (n allOf) Validate(input []string) (err error) {
 	for _, r := range n.rules {
 		err = r.Validate(input)
-		if err != nil {
+		if err != optErr && err != nil {
 			return errors.New(n.String())
 		}
 	}
@@ -106,7 +106,7 @@ func (n atLeastOneOf) Validate(input []string) error {
 	}
 	var pass int
 	for _, r := range n.rules {
-		if err := r.Validate(input); err == nil {
+		if err := r.Validate(input); err == nil || err == optErr {
 			pass++
 		}
 	}
@@ -144,8 +144,10 @@ func Opt(s ...string) Rule {
 	return o
 }
 
+var optErr = errors.New("opt err")
+
 func (n opt) Validate(input []string) error {
-	return nil
+	return optErr
 }
 
 func (n opt) Missing(input []string) (miss []string) {
@@ -191,6 +193,18 @@ func (n Key) Optionals() []string {
 func (n Key) String() string {
 	return string(n)
 }
+
+type none struct{}
+
+func None() Rule {
+	return none{}
+}
+
+func (n none) Validate(input []string) error   { return nil }
+func (n none) Required() []string              { return []string{} }
+func (n none) Optionals() []string             { return []string{} }
+func (n none) Missing(input []string) []string { return []string{} }
+func (n none) String() string                  { return "none" }
 
 func build(rules []Rule) (d defaultRule) {
 	for _, n := range rules {

@@ -22,6 +22,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -88,6 +89,14 @@ type DetachNetworkinterface struct {
 	Instance   *string `awsName:"InstanceId" awsType:"awsstr" templateName:"instance"`
 	Id         *string `awsName:"NetworkInterfaceId" awsType:"awsstr" templateName:"id"`
 	Force      *bool   `awsName:"Force" awsType:"awsbool" templateName:"force"`
+}
+
+func (cmd *DetachNetworkinterface) Params() params.Rule {
+	return params.OnlyOneOf(
+		params.AllOf(params.Key("instance"), params.Key("id")),
+		params.Key("attachment"),
+		params.Opt("force"),
+	)
 }
 
 func (cmd *DetachNetworkinterface) ValidateParams(params []string) ([]string, error) {

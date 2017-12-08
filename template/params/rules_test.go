@@ -118,6 +118,12 @@ func TestValidateRule(t *testing.T) {
 		{rules: AtLeastOneOf(Key("1"), Key("2")), in: []string{"0"}, expectErr: true, errContains: []string{"1", "2"}},
 		{rules: AtLeastOneOf(Key("1")), in: []string{"2"}, expectErr: true, errContains: []string{"1"}},
 
+		{rules: OnlyOneOf(
+			AllOf(Key("instance"), Key("id")),
+			Key("attachment"),
+			Opt("force")),
+			in: []string{"attachment"}},
+
 		{rules: AllOf(
 			OnlyOneOf(Key("distro"), Key("image")),
 			Key("count"), Key("type"), Key("name"), Key("subnet")),
@@ -135,6 +141,9 @@ func TestValidateRule(t *testing.T) {
 	}
 
 	for i, tcase := range tcases {
+		if i != 17 {
+			continue
+		}
 		err := tcase.rules.Validate(tcase.in)
 		if !tcase.expectErr && err != nil {
 			t.Fatalf("%d: expected no error got %s", i+1, err)

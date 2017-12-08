@@ -21,6 +21,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	awssdk "github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -78,12 +79,20 @@ type CreateDatabase struct {
 	CopyTagsToSnapshot *string `awsName:"CopyTagsToSnapshot" awsType:"awsbool" templateName:"copytagstosnapshot"`
 }
 
+func (cmd *CreateDatabase) Params() params.Rule {
+	return params.OnlyOneOf(
+		params.AllOf(params.Key("type"), params.Key("id"), params.Key("engine"), params.Key("password"), params.Key("username"), params.Key("size")),
+		params.AllOf(params.Key("replica"), params.Key("replica-source")),
+		params.Opt("autoupgrade", "availabilityzone", "backupretention", "cluster", "dbname", "parametergroup",
+			"dbsecuritygroups", "subnetgroup", "domain", "iamrole", "version", "iops", "license", "multiaz", "optiongroup",
+			"port", "backupwindow", "maintenancewindow", "public", "encrypted", "storagetype", "timezone", "vpcsecuritygroups"),
+	)
+}
+
 func (cmd *CreateDatabase) ValidateParams(params []string) ([]string, error) {
 	return paramRule{
-		tree: oneOf(allOf(node("type"), node("id"), node("engine"), node("password"), node("username"), node("size")), allOf(node("replica"), node("replica-source"))),
-		extras: []string{"autoupgrade", "availabilityzone", "backupretention", "cluster", "dbname", "parametergroup",
-			"dbsecuritygroups", "subnetgroup", "domain", "iamrole", "version", "iops", "license", "multiaz", "optiongroup",
-			"port", "backupwindow", "maintenancewindow", "public", "encrypted", "storagetype", "timezone", "vpcsecuritygroups"},
+		tree:   oneOf(allOf(node("type"), node("id"), node("engine"), node("password"), node("username"), node("size")), allOf(node("replica"), node("replica-source"))),
+		extras: []string{},
 	}.verify(params)
 }
 

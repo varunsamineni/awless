@@ -107,6 +107,9 @@ func generateCommands() {
 type cmdData struct {
 	Action, Entity, API, Call, Input, Output string
 	Params                                   []templateParam
+	RequiredParamsKey                        []string
+	ExtrasParamsKey                          []string
+	HasRequiredParams                        bool
 	HasDryRun                                bool
 	GenDryRun                                bool
 }
@@ -145,6 +148,14 @@ func (v *findStructs) Visit(node ast.Node) (w ast.Visitor) {
 						return params[i].Name < params[j].Name
 					})
 					cmd.Params = params
+				}
+				for _, p := range cmd.Params {
+					if p.IsRequired {
+						cmd.HasRequiredParams = true
+						cmd.RequiredParamsKey = append(cmd.RequiredParamsKey, p.Name)
+					} else {
+						cmd.ExtrasParamsKey = append(cmd.ExtrasParamsKey, p.Name)
+					}
 				}
 				v.result[typ.Name.Name] = *cmd
 			}
@@ -264,6 +275,18 @@ func New{{ $cmdName }}(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 func (cmd *{{ $cmdName }}) SetApi(api {{$tag.API}}iface.{{ ApiToInterface $tag.API }}) {
 	cmd.api = api
 }
+
+{{ if $tag.HasRequiredParams }}
+func (cmd *{{ $cmdName }}) Params() params.Rule {
+	return params.AllOf(
+		{{- range $param := $tag.RequiredParamsKey }}params.Key("{{ $param }}"),{{- end}}
+		{{- $length := len $tag.ExtrasParamsKey }} {{- if gt $length 0 }}
+		params.Opt({{- range $param := $tag.ExtrasParamsKey }}"{{ $param }}",{{- end}}),
+		{{- end }}
+	)
+}
+{{ end }}
+
 
 func (cmd *{{ $cmdName }}) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {

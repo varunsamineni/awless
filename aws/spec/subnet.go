@@ -32,8 +32,8 @@ type CreateSubnet struct {
 	logger           *logger.Logger
 	graph            cloudgraph.GraphAPI
 	api              ec2iface.EC2API
-	CIDR             *string `awsName:"CidrBlock" awsType:"awsstr" templateName:"cidr" required:""`
-	VPC              *string `awsName:"VpcId" awsType:"awsstr" templateName:"vpc" required:""`
+	CIDR             *string `awsName:"CidrBlock" awsType:"awsstr" templateName:"cidr"`
+	VPC              *string `awsName:"VpcId" awsType:"awsstr" templateName:"vpc"`
 	AvailabilityZone *string `awsName:"AvailabilityZone" awsType:"awsstr" templateName:"availabilityzone"`
 	Public           *bool   `awsType:"awsboolattribute" templateName:"public"`
 	Name             *string `templateName:"name"`
@@ -82,7 +82,7 @@ type UpdateSubnet struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
-	Id     *string `awsName:"SubnetId" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"SubnetId" awsType:"awsstr" templateName:"id"`
 	Public *bool   `awsName:"MapPublicIpOnLaunch" awsType:"awsboolattribute" templateName:"public"`
 }
 

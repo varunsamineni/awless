@@ -29,6 +29,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/iam"
@@ -206,6 +207,13 @@ type AttachPolicy struct {
 	Access  *string `templateName:"access"`
 }
 
+func (cmd *AttachPolicy) Params() params.Rule {
+	return params.AllOf(
+		params.OnlyOneOf(params.Key("user"), params.Key("role"), params.Key("group")),
+		params.OnlyOneOf(params.Key("arn"), params.AllOf(params.Key("access"), params.Key("service"))),
+	)
+}
+
 func (cmd *AttachPolicy) ValidateParams(params []string) ([]string, error) {
 	return paramRule{
 		tree: allOf(oneOfE(node("user"), node("role"), node("group")), oneOf(node("arn"), allOf(node("access"), node("service")))),
@@ -268,6 +276,13 @@ type DetachPolicy struct {
 	User   *string `awsName:"UserName" awsType:"awsstr" templateName:"user"`
 	Group  *string `awsName:"GroupName" awsType:"awsstr" templateName:"group"`
 	Role   *string `awsName:"RoleName" awsType:"awsstr" templateName:"role"`
+}
+
+func (cmd *DetachPolicy) Params() params.Rule {
+	return params.AllOf(
+		params.OnlyOneOf(params.Key("user"), params.Key("role"), params.Key("group")),
+		params.OnlyOneOf(params.Key("arn"), params.AllOf(params.Key("access"), params.Key("service"))),
+	)
 }
 
 func (cmd *DetachPolicy) ValidateParams(params []string) ([]string, error) {

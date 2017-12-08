@@ -35,11 +35,11 @@ type CreateInstance struct {
 	logger         *logger.Logger
 	graph          cloudgraph.GraphAPI
 	api            ec2iface.EC2API
-	Image          *string   `awsName:"ImageId" awsType:"awsstr" templateName:"image" required:""`
-	Count          *int64    `awsName:"MaxCount,MinCount" awsType:"awsin64" templateName:"count" required:""`
-	Type           *string   `awsName:"InstanceType" awsType:"awsstr" templateName:"type" required:""`
-	Name           *string   `templateName:"name" required:""`
-	Subnet         *string   `awsName:"SubnetId" awsType:"awsstr" templateName:"subnet" required:""`
+	Image          *string   `awsName:"ImageId" awsType:"awsstr" templateName:"image"`
+	Count          *int64    `awsName:"MaxCount,MinCount" awsType:"awsin64" templateName:"count"`
+	Type           *string   `awsName:"InstanceType" awsType:"awsstr" templateName:"type"`
+	Name           *string   `templateName:"name"`
+	Subnet         *string   `awsName:"SubnetId" awsType:"awsstr" templateName:"subnet"`
 	Keypair        *string   `awsName:"KeyName" awsType:"awsstr" templateName:"keypair"`
 	PrivateIP      *string   `awsName:"PrivateIpAddress" awsType:"awsstr" templateName:"ip"`
 	UserData       *string   `awsName:"UserData" awsType:"awsfiletobase64" templateName:"userdata"`
@@ -133,6 +133,10 @@ func (cmd *DeleteInstance) ConvertParams() ([]string, func(values map[string]int
 				return nil, nil
 			}
 		}
+}
+
+func (cmd *DeleteInstance) Params() params.Rule {
+	return params.OnlyOneOf(params.Key("ids"), params.Key("id"))
 }
 
 func (cmd *DeleteInstance) ValidateParams(params []string) ([]string, error) {
