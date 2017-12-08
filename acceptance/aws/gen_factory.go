@@ -36,6 +36,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns/snsiface"
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
 	"github.com/wallix/awless/aws/spec"
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 )
@@ -43,10 +44,10 @@ import (
 type AcceptanceFactory struct {
 	Mock   interface{}
 	Logger *logger.Logger
-	Graph  *graph.Graph
+	Graph  cloudgraph.GraphAPI
 }
 
-func NewAcceptanceFactory(mock interface{}, g *graph.Graph, l ...*logger.Logger) *AcceptanceFactory {
+func NewAcceptanceFactory(mock interface{}, g cloudgraph.GraphAPI, l ...*logger.Logger) *AcceptanceFactory {
 	logger := logger.DiscardLogger
 	if len(l) > 0 {
 		logger = l[0]

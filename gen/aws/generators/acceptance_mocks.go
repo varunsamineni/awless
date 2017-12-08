@@ -223,15 +223,18 @@ limitations under the License.
 // This file was automatically generated with go generate
 package awsat
 
-import "github.com/wallix/awless/aws/spec"
+import (
+  "github.com/wallix/awless/aws/spec"
+  "github.com/wallix/awless/cloud/graph"
+)
 
 type AcceptanceFactory struct {
 	Mock   interface{}
 	Logger *logger.Logger
-	Graph *graph.Graph
+	Graph cloudgraph.GraphAPI
 }
 
-func NewAcceptanceFactory(mock interface{}, g *graph.Graph, l ...*logger.Logger) *AcceptanceFactory {
+func NewAcceptanceFactory(mock interface{}, g cloudgraph.GraphAPI, l ...*logger.Logger) *AcceptanceFactory {
 	logger := logger.DiscardLogger
 	if len(l) > 0 {
 		logger = l[0]

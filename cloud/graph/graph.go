@@ -28,8 +28,20 @@ type Resource interface {
 }
 
 type Query struct {
+	ResourceType   string
+	PropertyValues []propertyValue
 }
 
-func NewQuery() Query {
-	return Query{}
+type propertyValue struct {
+	Name  string
+	Value interface{}
+}
+
+func NewQuery(resourceType string) Query {
+	return Query{ResourceType: resourceType}
+}
+
+func (q Query) Property(name string, value interface{}) Query {
+	q.PropertyValues = append(q.PropertyValues, propertyValue{Name: name, Value: value})
+	return q
 }

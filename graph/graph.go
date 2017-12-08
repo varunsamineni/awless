@@ -21,7 +21,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/cloud/rdf"
 	tstore "github.com/wallix/triplestore"
 )
@@ -153,6 +155,32 @@ func (g *Graph) ResolveResources(resolvers ...Resolver) ([]*Resource, error) {
 	}
 
 	return resources, nil
+}
+
+func (g *Graph) FindOne(q cloudgraph.Query) (cloudgraph.Resource, error) {
+	var resources []*Resource
+	var filters []FilterFn
+	for _, prop := range q.PropertyValues {
+		filters = append(filters, func(r *Resource) bool {
+			return reflect.DeepEqual(r.Property(prop.Name), prop.Value)
+		})
+	}
+	filtered, err := g.Filter(q.ResourceType, filters...)
+	if err != nil {
+		return nil, err
+	}
+	resources, err = filtered.GetAllResources(q.ResourceType)
+	if err != nil {
+		return nil, err
+	}
+	switch len(resources) {
+	case 0:
+		return nil, fmt.Errorf("resource not found")
+	case 1:
+		return resources[0], nil
+	default:
+		return nil, fmt.Errorf("multiple resources found")
+	}
 }
 
 func ResolveResourcesWithProp(snap tstore.RDFGraph, resType, propName, propVal string) ([]*Resource, error) {
