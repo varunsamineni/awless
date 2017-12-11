@@ -20,6 +20,7 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/graph"
 )
 
@@ -42,10 +43,10 @@ func TestCollectors(t *testing.T) {
 	g.AddParentRelation(v1, s1)
 	g.AddParentRelation(v2, s2)
 
-	var collect []*graph.Resource
+	var collect []cloudgraph.Resource
 	tcases := []struct {
 		vis graph.Visitor
-		exp []*graph.Resource
+		exp []cloudgraph.Resource
 	}{
 		{vis: &graph.ParentsVisitor{From: i1, Each: graph.VisitorCollectFunc(&collect)}, exp: []*graph.Resource{s1, v1}},
 		{vis: &graph.ParentsVisitor{From: s2, Each: graph.VisitorCollectFunc(&collect), IncludeFrom: true}, exp: []*graph.Resource{s2, v2}},

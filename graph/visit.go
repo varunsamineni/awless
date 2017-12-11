@@ -17,6 +17,10 @@ limitations under the License.
 package graph
 
 import (
+	"fmt"
+
+	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/cloud/properties"
 	"github.com/wallix/awless/cloud/rdf"
 	tstore "github.com/wallix/triplestore"
 )
@@ -25,42 +29,49 @@ type Visitor interface {
 	Visit(*Graph) error
 }
 
-type visitEachFunc func(res *Resource, depth int) error
+type visitEachFunc func(res cloudgraph.Resource, depth int) error
 
-func VisitorCollectFunc(collect *[]*Resource) visitEachFunc {
-	return func(res *Resource, depth int) error {
+func VisitorCollectFunc(collect *[]cloudgraph.Resource) visitEachFunc {
+	return func(res cloudgraph.Resource, depth int) error {
 		*collect = append(*collect, res)
 		return nil
 	}
 }
 
 type ParentsVisitor struct {
-	From        *Resource
+	From        cloudgraph.Resource
 	Each        visitEachFunc
 	IncludeFrom bool
 }
 
-func (v *ParentsVisitor) Visit(g *Graph) error {
+func (v *ParentsVisitor) Visit(g cloudgraph.GraphAPI) error {
 	startNode, foreach, err := prepareRDFVisit(g, v.From, v.Each, v.IncludeFrom)
 	if err != nil {
 		return err
 	}
-
-	return tstore.NewTree(g.store.Snapshot(), rdf.ParentOf).TraverseAncestors(startNode, foreach)
+	rdfG, ok := g.(*Graph)
+	if !ok {
+		return fmt.Errorf("graph is not a RDF graph and thus can not visited with ChildrenVisitor")
+	}
+	return tstore.NewTree(rdfG.store.Snapshot(), rdf.ParentOf).TraverseAncestors(startNode, foreach)
 }
 
 type ChildrenVisitor struct {
-	From        *Resource
+	From        cloudgraph.Resource
 	Each        visitEachFunc
 	IncludeFrom bool
 }
 
-func (v *ChildrenVisitor) Visit(g *Graph) error {
+func (v *ChildrenVisitor) Visit(g cloudgraph.GraphAPI) error {
 	startNode, foreach, err := prepareRDFVisit(g, v.From, v.Each, v.IncludeFrom)
 	if err != nil {
 		return err
 	}
-	return tstore.NewTree(g.store.Snapshot(), rdf.ParentOf).TraverseDFS(startNode, foreach)
+	rdfG, ok := g.(*Graph)
+	if !ok {
+		return fmt.Errorf("graph is not a RDF graph and thus can not visited with ChildrenVisitor")
+	}
+	return tstore.NewTree(rdfG.store.Snapshot(), rdf.ParentOf).TraverseDFS(startNode, foreach)
 }
 
 type SiblingsVisitor struct {
@@ -78,7 +89,7 @@ func (v *SiblingsVisitor) Visit(g *Graph) error {
 	return tstore.NewTree(g.store.Snapshot(), rdf.ParentOf).TraverseSiblings(startNode, resolveResourceType, foreach)
 }
 
-func prepareRDFVisit(g *Graph, root *Resource, each visitEachFunc, includeRoot bool) (string, func(g tstore.RDFGraph, n string, i int) error, error) {
+func prepareRDFVisit(g cloudgraph.GraphAPI, root cloudgraph.Resource, each visitEachFunc, includeRoot bool) (string, func(g tstore.RDFGraph, n string, i int) error, error) {
 	rootNode := root.Id()
 
 	foreach := func(rdfG tstore.RDFGraph, n string, i int) error {
@@ -86,7 +97,7 @@ func prepareRDFVisit(g *Graph, root *Resource, each visitEachFunc, includeRoot b
 		if err != nil {
 			return err
 		}
-		res, err := g.GetResource(rT, n)
+		res, err := g.FindOne(cloudgraph.NewQuery(rT).Property(properties.ID, n))
 		if err != nil {
 			return err
 		}

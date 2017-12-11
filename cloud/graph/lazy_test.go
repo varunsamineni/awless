@@ -15,7 +15,10 @@ limitations under the License.
 */
 package cloudgraph
 
-import "testing"
+import (
+	"io"
+	"testing"
+)
 
 func TestLazyLoadingGraph(t *testing.T) {
 	var nbCalls int
@@ -38,6 +41,18 @@ func TestLazyLoadingGraph(t *testing.T) {
 type StubGraph struct {
 }
 
-func (g *StubGraph) FindOne(q Query) (Resource, error) {
+func (g *StubGraph) Find(Query) ([]Resource, error) {
 	return nil, nil
+}
+
+func (g *StubGraph) FindOne(Query) (Resource, error) {
+	return nil, nil
+}
+
+func (g *StubGraph) Accept(Visitor) error {
+	return nil
+}
+
+func (g *StubGraph) MarshalTo(io.Writer) error {
+	return nil
 }

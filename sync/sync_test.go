@@ -6,12 +6,13 @@ import (
 	"testing"
 
 	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/graph"
 
 	"io/ioutil"
 
 	"path/filepath"
 
-	"github.com/wallix/awless/graph"
+	"github.com/wallix/awless/cloud/graph"
 )
 
 func TestSyncTripleFiles(t *testing.T) {
@@ -65,12 +66,14 @@ func TestSyncTripleFiles(t *testing.T) {
 
 type mockService struct {
 	name, region string
-	g            *graph.Graph
+	g            cloudgraph.GraphAPI
 }
 
-func (s *mockService) Region() string                                            { return s.region }
-func (s *mockService) Name() string                                              { return s.name }
-func (s *mockService) ResourceTypes() []string                                   { return []string{} }
-func (s *mockService) Fetch(context.Context) (*graph.Graph, error)               { return s.g, nil }
-func (s *mockService) IsSyncDisabled() bool                                      { return false }
-func (s *mockService) FetchByType(context.Context, string) (*graph.Graph, error) { return nil, nil }
+func (s *mockService) Region() string                                     { return s.region }
+func (s *mockService) Name() string                                       { return s.name }
+func (s *mockService) ResourceTypes() []string                            { return []string{} }
+func (s *mockService) Fetch(context.Context) (cloudgraph.GraphAPI, error) { return s.g, nil }
+func (s *mockService) IsSyncDisabled() bool                               { return false }
+func (s *mockService) FetchByType(context.Context, string) (cloudgraph.GraphAPI, error) {
+	return nil, nil
+}

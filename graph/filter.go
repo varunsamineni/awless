@@ -3,9 +3,11 @@ package graph
 import (
 	"fmt"
 	"strings"
+
+	"github.com/wallix/awless/cloud/graph"
 )
 
-type FilterFn func(*Resource) bool
+type FilterFn func(cloudgraph.Resource) bool
 
 func (g *Graph) Filter(entity string, filters ...FilterFn) (*Graph, error) {
 	return g.filter(applyAnd, entity, filters...)

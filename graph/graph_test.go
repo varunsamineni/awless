@@ -18,6 +18,7 @@ package graph
 
 import (
 	"reflect"
+	"sort"
 	"strings"
 	"testing"
 
@@ -103,6 +104,56 @@ func TestAddGraphRelation(t *testing.T) {
 			t.Fatalf("got\n%q\nwant\n%q\n", got, want)
 		}
 	})
+}
+
+func TestFind(t *testing.T) {
+	g := NewGraph()
+	i1 := instResource("i1").prop("Name", "redis").prop("Subnet", "s1").build()
+	i2 := instResource("i2").prop("Subnet", "s1").build()
+	s1 := subResource("s1").build()
+	s2 := subResource("s2").build()
+	v1 := vpcResource("s1").build()
+	g.AddResource(i1, i2, s1, s2, v1)
+	tcases := []struct {
+		query     cloudgraph.Query
+		expectRes []cloudgraph.Resource
+	}{
+		{
+			query:     cloudgraph.NewQuery("instance"),
+			expectRes: []cloudgraph.Resource{i1, i2},
+		},
+		{
+			query:     cloudgraph.NewQuery("instance").Property("Subnet", "s1"),
+			expectRes: []cloudgraph.Resource{i1, i2},
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet"),
+			expectRes: []cloudgraph.Resource{s1, s2},
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet").Property("ID", "s1"),
+			expectRes: []cloudgraph.Resource{s1},
+		},
+		{
+			query:     cloudgraph.NewQuery("instance").Property("Name", "nothing"),
+			expectRes: nil,
+		},
+	}
+	for i, tcase := range tcases {
+		res, err := g.Find(tcase.query)
+		if err != nil {
+			t.Fatalf("%d: %s", i+1, err)
+		}
+		sort.Slice(res, func(i int, j int) bool {
+			if res[i].Type() == res[j].Type() {
+				return res[i].Id() <= res[j].Id()
+			}
+			return res[i].Type() < res[j].Type()
+		})
+		if got, want := res, tcase.expectRes; !reflect.DeepEqual(got, want) {
+			t.Fatalf("%d: got %v, want %v", i+1, got, want)
+		}
+	}
 }
 
 func TestFindOne(t *testing.T) {

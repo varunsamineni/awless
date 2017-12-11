@@ -3,6 +3,7 @@ package graph
 import (
 	"fmt"
 
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/cloud/properties"
 	"github.com/wallix/awless/cloud/rdf"
 	tstore "github.com/wallix/triplestore"
@@ -149,8 +150,8 @@ type ByType struct {
 	Typ string
 }
 
-func (r *ByType) Resolve(snap tstore.RDFGraph) ([]*Resource, error) {
-	var resources []*Resource
+func (r *ByType) Resolve(snap tstore.RDFGraph) ([]cloudgraph.Resource, error) {
+	var resources []cloudgraph.Resource
 	typ := namespacedResourceType(r.Typ)
 	for _, t := range snap.WithPredObj(rdf.RdfType, tstore.Resource(typ)) {
 		r := InitResource(r.Typ, t.Subject())
