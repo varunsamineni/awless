@@ -92,6 +92,29 @@ func (b *Builder) buildGraphFilters() (funcs []graph.FilterFn, err error) {
 	return
 }
 
+func (b *Builder) buildQuery() (q cloudgraph.Query, err error) {
+	q = cloudgraph.NewQuery(b.rdfType).IgnoreCase().MatchString()
+	for _, f := range b.filters {
+		splits := strings.SplitN(f, "=", 2)
+		if len(splits) == 2 {
+			name, val := strings.TrimSpace(strings.Title(splits[0])), strings.TrimSpace(splits[1])
+			key := ColumnDefinitions(b.columnDefinitions).resolveKey(name)
+
+			if key != "" {
+				q = q.Property(key, val)
+			} else {
+				var allowed []string
+				for _, h := range b.columnDefinitions {
+					allowed = append(allowed, h.propKey())
+				}
+				err = fmt.Errorf("Invalid filter key '%s'. Expecting any of: %s. (Note: filter keys/values are case insensitive)", name, strings.Join(allowed, ", "))
+			}
+		}
+
+	}
+	return
+}
+
 func (b *Builder) buildGraphTagFilters() (funcs []graph.FilterFn) {
 	for _, f := range b.tagFilters {
 		splits := strings.SplitN(f, "=", 2)
@@ -121,9 +144,9 @@ func (b *Builder) Build() (Displayer, error) {
 	base := fromGraphDisplayer{sorter: &defaultSorter{sortBy: b.sort, descending: b.reverseSort}, rdfType: b.rdfType, columnDefinitions: b.columnDefinitions, maxwidth: b.maxwidth, noHeaders: b.noHeaders}
 
 	switch b.dataSource.(type) {
-	case *graph.Graph:
+	case cloudgraph.GraphAPI:
 		if b.rdfType == "" {
-			gph := b.dataSource.(*graph.Graph)
+			gph := b.dataSource.(cloudgraph.GraphAPI)
 			switch b.format {
 			case "table":
 				dis := &multiResourcesTableDisplayer{base}
@@ -145,14 +168,12 @@ func (b *Builder) Build() (Displayer, error) {
 			}
 		}
 
-		filteredGraph := b.dataSource.(*graph.Graph)
-
-		if filters, err := b.buildGraphFilters(); len(filters) > 0 && err == nil {
-			filteredGraph, err = filteredGraph.Filter(b.rdfType, filters...)
-			if err != nil {
-				return nil, err
-			}
-		} else if err != nil {
+		filteredGraph := b.dataSource.(cloudgraph.GraphAPI)
+		q, err := b.buildQuery()
+		if err != nil {
+			return nil, err
+		}
+		if filteredGraph, err = filteredGraph.FilterGraph(q); err != nil {
 			return nil, err
 		}
 
@@ -380,14 +401,14 @@ type table [][]interface{}
 
 type fromGraphDisplayer struct {
 	sorter
-	g                 *graph.Graph
+	g                 cloudgraph.GraphAPI
 	rdfType           string
 	columnDefinitions []ColumnDefinition
 	maxwidth          int
 	noHeaders         bool
 }
 
-func (d *fromGraphDisplayer) setGraph(g *graph.Graph) {
+func (d *fromGraphDisplayer) setGraph(g cloudgraph.GraphAPI) {
 	d.g = g
 }
 

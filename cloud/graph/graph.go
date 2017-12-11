@@ -20,13 +20,9 @@ import "io"
 
 type GraphAPI interface {
 	Find(Query) ([]Resource, error)
+	FilterGraph(Query) (GraphAPI, error)
 	FindOne(Query) (Resource, error)
-	Accept(v Visitor) error
 	MarshalTo(w io.Writer) error
-}
-
-type Visitor interface {
-	Visit(GraphAPI) error
 }
 
 type Resource interface {
@@ -48,9 +44,21 @@ func (q Query) Property(name string, value interface{}) Query {
 	return q
 }
 
+func (q Query) IgnoreCase() Query {
+	q.IgnoreCaseProp = true
+	return q
+}
+
+func (q Query) MatchString() Query {
+	q.MatchStringProp = true
+	return q
+}
+
 type Query struct {
-	ResourceType   []string
-	PropertyValues []propertyValue
+	ResourceType    []string
+	PropertyValues  []propertyValue
+	MatchStringProp bool
+	IgnoreCaseProp  bool
 }
 
 type propertyValue struct {

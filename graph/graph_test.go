@@ -111,7 +111,7 @@ func TestFind(t *testing.T) {
 	i1 := instResource("i1").prop("Name", "redis").prop("Subnet", "s1").build()
 	i2 := instResource("i2").prop("Subnet", "s1").build()
 	s1 := subResource("s1").build()
-	s2 := subResource("s2").build()
+	s2 := subResource("s2").prop("ActiveServicesCount", 42).build()
 	v1 := vpcResource("s1").build()
 	g.AddResource(i1, i2, s1, s2, v1)
 	tcases := []struct {
@@ -137,6 +137,22 @@ func TestFind(t *testing.T) {
 		{
 			query:     cloudgraph.NewQuery("instance").Property("Name", "nothing"),
 			expectRes: nil,
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet").Property("ID", "S1"),
+			expectRes: nil,
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet").Property("ID", "S1").IgnoreCase(),
+			expectRes: []cloudgraph.Resource{s1},
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet").Property("ActiveServicesCount", "42"),
+			expectRes: nil,
+		},
+		{
+			query:     cloudgraph.NewQuery("subnet").Property("ActiveServicesCount", "42").MatchString(),
+			expectRes: []cloudgraph.Resource{s2},
 		},
 	}
 	for i, tcase := range tcases {

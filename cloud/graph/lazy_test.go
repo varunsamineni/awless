@@ -45,12 +45,12 @@ func (g *StubGraph) Find(Query) ([]Resource, error) {
 	return nil, nil
 }
 
-func (g *StubGraph) FindOne(Query) (Resource, error) {
+func (g *StubGraph) FilterGraph(Query) (GraphAPI, error) {
 	return nil, nil
 }
 
-func (g *StubGraph) Accept(Visitor) error {
-	return nil
+func (g *StubGraph) FindOne(Query) (Resource, error) {
+	return nil, nil
 }
 
 func (g *StubGraph) MarshalTo(io.Writer) error {
