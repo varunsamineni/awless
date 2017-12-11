@@ -215,8 +215,7 @@ func (c *mockCommandWithResult) Run(ctx, params map[string]interface{}) (interfa
 func (c *mockCommandWithResult) DryRun(ctx, params map[string]interface{}) (interface{}, error) {
 	return nil, nil
 }
-func (c *mockCommandWithResult) ValidateParams(p []string) ([]string, error) { return nil, nil }
-func (c *mockCommandWithResult) ExtractResult(i interface{}) string          { return "" }
+func (c *mockCommandWithResult) ExtractResult(i interface{}) string { return "" }
 
 func TestFailOnDeclarationWithNoResultPass(t *testing.T) {
 	env := NewEnv()

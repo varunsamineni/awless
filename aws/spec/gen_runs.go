@@ -60,7 +60,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/sqs/sqsiface"
 	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/logger"
-	"github.com/wallix/awless/template/params"
 )
 
 func NewAttachAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Logger) *AttachAlarm {
@@ -79,10 +78,6 @@ func NewAttachAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *AttachAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
-}
-
-func (cmd *AttachAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("action-arn"), params.Key("name"))
 }
 
 func (cmd *AttachAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -166,12 +161,6 @@ func (cmd *AttachContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
 }
 
-func (cmd *AttachContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("container-name"), params.Key("image"), params.Key("memory-hard-limit"), params.Key("name"),
-		params.Opt("command", "env", "ports", "privileged", "workdir"),
-	)
-}
-
 func (cmd *AttachContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -251,12 +240,6 @@ func NewAttachElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *AttachElasticip) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *AttachElasticip) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("allow-reassociation", "instance", "networkinterface", "privateip"),
-	)
 }
 
 func (cmd *AttachElasticip) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -367,12 +350,6 @@ func (cmd *AttachInstance) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
 }
 
-func (cmd *AttachInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("targetgroup"),
-		params.Opt("port"),
-	)
-}
-
 func (cmd *AttachInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -460,12 +437,6 @@ func (cmd *AttachInstanceprofile) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *AttachInstanceprofile) Params() params.Rule {
-	return params.AllOf(params.Key("instance"), params.Key("name"),
-		params.Opt("replace"),
-	)
-}
-
 func (cmd *AttachInstanceprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -541,10 +512,6 @@ func NewAttachInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 
 func (cmd *AttachInternetgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *AttachInternetgateway) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("vpc"))
 }
 
 func (cmd *AttachInternetgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -655,12 +622,6 @@ func (cmd *AttachMfadevice) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *AttachMfadevice) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("mfa-code-1"), params.Key("mfa-code-2"), params.Key("user"),
-		params.Opt("no-prompt"),
-	)
-}
-
 func (cmd *AttachMfadevice) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -746,10 +707,6 @@ func NewAttachNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *AttachNetworkinterface) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *AttachNetworkinterface) Params() params.Rule {
-	return params.AllOf(params.Key("device-index"), params.Key("id"), params.Key("instance"))
 }
 
 func (cmd *AttachNetworkinterface) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -941,10 +898,6 @@ func (cmd *AttachRole) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *AttachRole) Params() params.Rule {
-	return params.AllOf(params.Key("instanceprofile"), params.Key("name"))
-}
-
 func (cmd *AttachRole) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -1030,10 +983,6 @@ func NewAttachRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 
 func (cmd *AttachRoutetable) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *AttachRoutetable) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("subnet"))
 }
 
 func (cmd *AttachRoutetable) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -1144,10 +1093,6 @@ func (cmd *AttachSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *AttachSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("instance"))
-}
-
 func (cmd *AttachSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -1227,10 +1172,6 @@ func NewAttachUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 
 func (cmd *AttachUser) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *AttachUser) Params() params.Rule {
-	return params.AllOf(params.Key("group"), params.Key("name"))
 }
 
 func (cmd *AttachUser) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -1318,10 +1259,6 @@ func NewAttachVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *AttachVolume) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *AttachVolume) Params() params.Rule {
-	return params.AllOf(params.Key("device"), params.Key("id"), params.Key("instance"))
 }
 
 func (cmd *AttachVolume) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -1513,10 +1450,6 @@ func (cmd *CheckCertificate) SetApi(api acmiface.ACMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CheckCertificate) Params() params.Rule {
-	return params.AllOf(params.Key("arn"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckCertificate) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -1596,10 +1529,6 @@ func NewCheckDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 
 func (cmd *CheckDatabase) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
-}
-
-func (cmd *CheckDatabase) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckDatabase) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -1683,10 +1612,6 @@ func (cmd *CheckDistribution) SetApi(api cloudfrontiface.CloudFrontAPI) {
 	cmd.api = api
 }
 
-func (cmd *CheckDistribution) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckDistribution) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -1766,10 +1691,6 @@ func NewCheckInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 
 func (cmd *CheckInstance) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CheckInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -1853,10 +1774,6 @@ func (cmd *CheckLoadbalancer) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
 }
 
-func (cmd *CheckLoadbalancer) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckLoadbalancer) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -1936,10 +1853,6 @@ func NewCheckNatgateway(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *CheckNatgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CheckNatgateway) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckNatgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -2023,10 +1936,6 @@ func (cmd *CheckNetworkinterface) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CheckNetworkinterface) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckNetworkinterface) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2106,10 +2015,6 @@ func NewCheckScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 
 func (cmd *CheckScalinggroup) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
-}
-
-func (cmd *CheckScalinggroup) Params() params.Rule {
-	return params.AllOf(params.Key("count"), params.Key("name"), params.Key("timeout"))
 }
 
 func (cmd *CheckScalinggroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -2193,10 +2098,6 @@ func (cmd *CheckSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CheckSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2278,10 +2179,6 @@ func (cmd *CheckVolume) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CheckVolume) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
-}
-
 func (cmd *CheckVolume) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2361,12 +2258,6 @@ func NewCopyImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Log
 
 func (cmd *CopyImage) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CopyImage) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("source-id"), params.Key("source-region"),
-		params.Opt("description", "encrypted"),
-	)
 }
 
 func (cmd *CopyImage) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -2477,12 +2368,6 @@ func (cmd *CopySnapshot) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CopySnapshot) Params() params.Rule {
-	return params.AllOf(params.Key("source-id"), params.Key("source-region"),
-		params.Opt("description", "encrypted"),
-	)
-}
-
 func (cmd *CopySnapshot) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2591,12 +2476,6 @@ func (cmd *CreateAccesskey) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateAccesskey) Params() params.Rule {
-	return params.AllOf(params.Key("user"),
-		params.Opt("save"),
-	)
-}
-
 func (cmd *CreateAccesskey) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2682,12 +2561,6 @@ func NewCreateAlarm(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *CreateAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("evaluation-periods"), params.Key("metric"), params.Key("name"), params.Key("namespace"), params.Key("operator"), params.Key("period"), params.Key("statistic-function"), params.Key("threshold"),
-		params.Opt("alarm-actions", "description", "dimensions", "enabled", "insufficientdata-actions", "ok-actions", "unit"),
-	)
 }
 
 func (cmd *CreateAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -2777,12 +2650,6 @@ func (cmd *CreateAppscalingpolicy) SetApi(api applicationautoscalingiface.Applic
 	cmd.api = api
 }
 
-func (cmd *CreateAppscalingpolicy) Params() params.Rule {
-	return params.AllOf(params.Key("dimension"), params.Key("name"), params.Key("resource"), params.Key("service-namespace"), params.Key("stepscaling-adjustment-type"), params.Key("stepscaling-adjustments"), params.Key("type"),
-		params.Opt("stepscaling-aggregation-type", "stepscaling-cooldown", "stepscaling-min-adjustment-magnitude"),
-	)
-}
-
 func (cmd *CreateAppscalingpolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -2868,10 +2735,6 @@ func NewCreateAppscalingtarget(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *CreateAppscalingtarget) SetApi(api applicationautoscalingiface.ApplicationAutoScalingAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateAppscalingtarget) Params() params.Rule {
-	return params.AllOf(params.Key("dimension"), params.Key("max-capacity"), params.Key("min-capacity"), params.Key("resource"), params.Key("role"), params.Key("service-namespace"))
 }
 
 func (cmd *CreateAppscalingtarget) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -2961,12 +2824,6 @@ func (cmd *CreateBucket) SetApi(api s3iface.S3API) {
 	cmd.api = api
 }
 
-func (cmd *CreateBucket) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("acl"),
-	)
-}
-
 func (cmd *CreateBucket) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3054,12 +2911,6 @@ func (cmd *CreateCertificate) SetApi(api acmiface.ACMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateCertificate) Params() params.Rule {
-	return params.AllOf(params.Key("domains"),
-		params.Opt("validation-domains"),
-	)
-}
-
 func (cmd *CreateCertificate) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3139,10 +2990,6 @@ func NewCreateContainercluster(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *CreateContainercluster) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateContainercluster) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
 }
 
 func (cmd *CreateContainercluster) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -3313,10 +3160,6 @@ func (cmd *CreateDbsubnetgroup) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateDbsubnetgroup) Params() params.Rule {
-	return params.AllOf(params.Key("description"), params.Key("name"), params.Key("subnets"))
-}
-
 func (cmd *CreateDbsubnetgroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3404,12 +3247,6 @@ func (cmd *CreateDistribution) SetApi(api cloudfrontiface.CloudFrontAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateDistribution) Params() params.Rule {
-	return params.AllOf(params.Key("origin-domain"),
-		params.Opt("certificate", "comment", "default-file", "domain-aliases", "enable", "forward-cookies", "forward-queries", "https-behaviour", "min-ttl", "origin-path", "price-class"),
-	)
-}
-
 func (cmd *CreateDistribution) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3489,10 +3326,6 @@ func NewCreateElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *CreateElasticip) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateElasticip) Params() params.Rule {
-	return params.AllOf(params.Key("domain"))
 }
 
 func (cmd *CreateElasticip) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -3603,12 +3436,6 @@ func (cmd *CreateFunction) SetApi(api lambdaiface.LambdaAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateFunction) Params() params.Rule {
-	return params.AllOf(params.Key("handler"), params.Key("name"), params.Key("role"), params.Key("runtime"),
-		params.Opt("bucket", "description", "memory", "object", "objectversion", "publish", "timeout", "zipfile"),
-	)
-}
-
 func (cmd *CreateFunction) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3696,10 +3523,6 @@ func (cmd *CreateGroup) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateGroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *CreateGroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -3785,12 +3608,6 @@ func NewCreateImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *CreateImage) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateImage) Params() params.Rule {
-	return params.AllOf(params.Key("instance"), params.Key("name"),
-		params.Opt("description", "reboot"),
-	)
 }
 
 func (cmd *CreateImage) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -4009,10 +3826,6 @@ func (cmd *CreateInstanceprofile) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateInstanceprofile) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *CreateInstanceprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -4208,12 +4021,6 @@ func (cmd *CreateKeypair) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CreateKeypair) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("encrypted"),
-	)
-}
-
 func (cmd *CreateKeypair) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -4301,12 +4108,6 @@ func (cmd *CreateLaunchconfiguration) SetApi(api autoscalingiface.AutoScalingAPI
 	cmd.api = api
 }
 
-func (cmd *CreateLaunchconfiguration) Params() params.Rule {
-	return params.AllOf(params.Key("image"), params.Key("name"), params.Key("type"),
-		params.Opt("distro", "keypair", "public", "role", "securitygroups", "spotprice", "userdata"),
-	)
-}
-
 func (cmd *CreateLaunchconfiguration) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -4392,12 +4193,6 @@ func NewCreateListener(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 
 func (cmd *CreateListener) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateListener) Params() params.Rule {
-	return params.AllOf(params.Key("actiontype"), params.Key("loadbalancer"), params.Key("port"), params.Key("protocol"), params.Key("targetgroup"),
-		params.Opt("certificate", "sslpolicy"),
-	)
 }
 
 func (cmd *CreateListener) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -4574,12 +4369,6 @@ func (cmd *CreateLoginprofile) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateLoginprofile) Params() params.Rule {
-	return params.AllOf(params.Key("password"), params.Key("username"),
-		params.Opt("password-reset"),
-	)
-}
-
 func (cmd *CreateLoginprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -4667,10 +4456,6 @@ func (cmd *CreateMfadevice) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateMfadevice) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *CreateMfadevice) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -4750,10 +4535,6 @@ func NewCreateNatgateway(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 
 func (cmd *CreateNatgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateNatgateway) Params() params.Rule {
-	return params.AllOf(params.Key("elasticip-id"), params.Key("subnet"))
 }
 
 func (cmd *CreateNatgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -4841,12 +4622,6 @@ func NewCreateNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *CreateNetworkinterface) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateNetworkinterface) Params() params.Rule {
-	return params.AllOf(params.Key("subnet"),
-		params.Opt("description", "privateip", "securitygroups"),
-	)
 }
 
 func (cmd *CreateNetworkinterface) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -4957,12 +4732,6 @@ func (cmd *CreatePolicy) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreatePolicy) Params() params.Rule {
-	return params.AllOf(params.Key("action"), params.Key("effect"), params.Key("name"), params.Key("resource"),
-		params.Opt("conditions", "description"),
-	)
-}
-
 func (cmd *CreatePolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5048,12 +4817,6 @@ func NewCreateQueue(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *CreateQueue) SetApi(api sqsiface.SQSAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateQueue) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("delay", "max-msg-size", "msg-wait", "policy", "redrive-policy", "retention-period", "visibility-timeout"),
-	)
 }
 
 func (cmd *CreateQueue) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -5143,12 +4906,6 @@ func (cmd *CreateRecord) SetApi(api route53iface.Route53API) {
 	cmd.api = api
 }
 
-func (cmd *CreateRecord) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("ttl"), params.Key("type"), params.Key("value"), params.Key("zone"),
-		params.Opt("comment"),
-	)
-}
-
 func (cmd *CreateRecord) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5228,10 +4985,6 @@ func NewCreateRepository(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 
 func (cmd *CreateRepository) SetApi(api ecriface.ECRAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateRepository) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
 }
 
 func (cmd *CreateRepository) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -5321,12 +5074,6 @@ func (cmd *CreateRole) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateRole) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("conditions", "principal-account", "principal-service", "principal-user", "sleep-after"),
-	)
-}
-
 func (cmd *CreateRole) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5406,10 +5153,6 @@ func NewCreateRoute(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *CreateRoute) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateRoute) Params() params.Rule {
-	return params.AllOf(params.Key("cidr"), params.Key("gateway"), params.Key("table"))
 }
 
 func (cmd *CreateRoute) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -5520,10 +5263,6 @@ func (cmd *CreateRoutetable) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CreateRoutetable) Params() params.Rule {
-	return params.AllOf(params.Key("vpc"))
-}
-
 func (cmd *CreateRoutetable) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5632,12 +5371,6 @@ func (cmd *CreateS3object) SetApi(api s3iface.S3API) {
 	cmd.api = api
 }
 
-func (cmd *CreateS3object) Params() params.Rule {
-	return params.AllOf(params.Key("bucket"), params.Key("file"),
-		params.Opt("acl", "name"),
-	)
-}
-
 func (cmd *CreateS3object) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5717,12 +5450,6 @@ func NewCreateScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 
 func (cmd *CreateScalinggroup) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateScalinggroup) Params() params.Rule {
-	return params.AllOf(params.Key("launchconfiguration"), params.Key("max-size"), params.Key("min-size"), params.Key("name"), params.Key("subnets"),
-		params.Opt("cooldown", "desired-capacity", "healthcheck-grace-period", "healthcheck-type", "new-instances-protected", "targetgroups"),
-	)
 }
 
 func (cmd *CreateScalinggroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -5812,12 +5539,6 @@ func (cmd *CreateScalingpolicy) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateScalingpolicy) Params() params.Rule {
-	return params.AllOf(params.Key("adjustment-scaling"), params.Key("adjustment-type"), params.Key("name"), params.Key("scalinggroup"),
-		params.Opt("adjustment-magnitude", "cooldown"),
-	)
-}
-
 func (cmd *CreateScalingpolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -5903,10 +5624,6 @@ func NewCreateSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 
 func (cmd *CreateSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("description"), params.Key("name"), params.Key("vpc"))
 }
 
 func (cmd *CreateSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -6017,12 +5734,6 @@ func (cmd *CreateSnapshot) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CreateSnapshot) Params() params.Rule {
-	return params.AllOf(params.Key("volume"),
-		params.Opt("description"),
-	)
-}
-
 func (cmd *CreateSnapshot) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -6129,12 +5840,6 @@ func NewCreateStack(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *CreateStack) SetApi(api cloudformationiface.CloudFormationAPI) {
 	cmd.api = api
-}
-
-func (cmd *CreateStack) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("template-file"),
-		params.Opt("capabilities", "disable-rollback", "notifications", "on-failure", "parameters", "policy-file", "resource-types", "role", "stack-file", "tags", "timeout"),
-	)
 }
 
 func (cmd *CreateStack) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -6332,10 +6037,6 @@ func (cmd *CreateSubscription) SetApi(api snsiface.SNSAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateSubscription) Params() params.Rule {
-	return params.AllOf(params.Key("endpoint"), params.Key("protocol"), params.Key("topic"))
-}
-
 func (cmd *CreateSubscription) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -6423,10 +6124,6 @@ func (cmd *CreateTag) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CreateTag) Params() params.Rule {
-	return params.AllOf(params.Key("key"), params.Key("resource"), params.Key("value"))
-}
-
 func (cmd *CreateTag) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -6502,12 +6199,6 @@ func NewCreateTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 
 func (cmd *CreateTargetgroup) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateTargetgroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("port"), params.Key("protocol"), params.Key("vpc"),
-		params.Opt("healthcheckinterval", "healthcheckpath", "healthcheckport", "healthcheckprotocol", "healthchecktimeout", "healthythreshold", "matcher", "unhealthythreshold"),
-	)
 }
 
 func (cmd *CreateTargetgroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -6597,10 +6288,6 @@ func (cmd *CreateTopic) SetApi(api snsiface.SNSAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateTopic) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *CreateTopic) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -6688,10 +6375,6 @@ func (cmd *CreateUser) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *CreateUser) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *CreateUser) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -6777,10 +6460,6 @@ func NewCreateVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *CreateVolume) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *CreateVolume) Params() params.Rule {
-	return params.AllOf(params.Key("availabilityzone"), params.Key("size"))
 }
 
 func (cmd *CreateVolume) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -6891,12 +6570,6 @@ func (cmd *CreateVpc) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *CreateVpc) Params() params.Rule {
-	return params.AllOf(params.Key("cidr"),
-		params.Opt("name"),
-	)
-}
-
 func (cmd *CreateVpc) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7005,12 +6678,6 @@ func (cmd *CreateZone) SetApi(api route53iface.Route53API) {
 	cmd.api = api
 }
 
-func (cmd *CreateZone) Params() params.Rule {
-	return params.AllOf(params.Key("callerreference"), params.Key("name"),
-		params.Opt("comment", "delegationsetid", "isprivate", "vpcid", "vpcregion"),
-	)
-}
-
 func (cmd *CreateZone) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7096,12 +6763,6 @@ func NewDeleteAccesskey(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *DeleteAccesskey) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteAccesskey) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("user"),
-	)
 }
 
 func (cmd *DeleteAccesskey) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -7191,10 +6852,6 @@ func (cmd *DeleteAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7280,10 +6937,6 @@ func NewDeleteAppscalingpolicy(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *DeleteAppscalingpolicy) SetApi(api applicationautoscalingiface.ApplicationAutoScalingAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteAppscalingpolicy) Params() params.Rule {
-	return params.AllOf(params.Key("dimension"), params.Key("name"), params.Key("resource"), params.Key("service-namespace"))
 }
 
 func (cmd *DeleteAppscalingpolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -7373,10 +7026,6 @@ func (cmd *DeleteAppscalingtarget) SetApi(api applicationautoscalingiface.Applic
 	cmd.api = api
 }
 
-func (cmd *DeleteAppscalingtarget) Params() params.Rule {
-	return params.AllOf(params.Key("dimension"), params.Key("resource"), params.Key("service-namespace"))
-}
-
 func (cmd *DeleteAppscalingtarget) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7462,10 +7111,6 @@ func NewDeleteBucket(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *DeleteBucket) SetApi(api s3iface.S3API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteBucket) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
 }
 
 func (cmd *DeleteBucket) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -7555,10 +7200,6 @@ func (cmd *DeleteCertificate) SetApi(api acmiface.ACMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteCertificate) Params() params.Rule {
-	return params.AllOf(params.Key("arn"))
-}
-
 func (cmd *DeleteCertificate) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7644,10 +7285,6 @@ func NewDeleteContainercluster(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *DeleteContainercluster) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteContainercluster) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteContainercluster) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -7737,12 +7374,6 @@ func (cmd *DeleteContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("all-versions"),
-	)
-}
-
 func (cmd *DeleteContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -7818,12 +7449,6 @@ func NewDeleteDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 
 func (cmd *DeleteDatabase) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteDatabase) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("skip-snapshot", "snapshot"),
-	)
 }
 
 func (cmd *DeleteDatabase) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -7913,10 +7538,6 @@ func (cmd *DeleteDbsubnetgroup) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteDbsubnetgroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteDbsubnetgroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8002,10 +7623,6 @@ func NewDeleteDistribution(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 
 func (cmd *DeleteDistribution) SetApi(api cloudfrontiface.CloudFrontAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteDistribution) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteDistribution) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -8197,12 +7814,6 @@ func (cmd *DeleteFunction) SetApi(api lambdaiface.LambdaAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteFunction) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("version"),
-	)
-}
-
 func (cmd *DeleteFunction) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8290,10 +7901,6 @@ func (cmd *DeleteGroup) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteGroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteGroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8379,12 +7986,6 @@ func NewDeleteImage(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *DeleteImage) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteImage) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("delete-snapshots"),
-	)
 }
 
 func (cmd *DeleteImage) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -8572,10 +8173,6 @@ func (cmd *DeleteInstanceprofile) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteInstanceprofile) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteInstanceprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8661,10 +8258,6 @@ func NewDeleteInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 
 func (cmd *DeleteInternetgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteInternetgateway) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteInternetgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -8775,10 +8368,6 @@ func (cmd *DeleteKeypair) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteKeypair) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteKeypair) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8887,10 +8476,6 @@ func (cmd *DeleteLaunchconfiguration) SetApi(api autoscalingiface.AutoScalingAPI
 	cmd.api = api
 }
 
-func (cmd *DeleteLaunchconfiguration) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteLaunchconfiguration) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -8976,10 +8561,6 @@ func NewDeleteListener(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 
 func (cmd *DeleteListener) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteListener) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteListener) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -9069,10 +8650,6 @@ func (cmd *DeleteLoadbalancer) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteLoadbalancer) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteLoadbalancer) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9158,10 +8735,6 @@ func NewDeleteLoginprofile(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 
 func (cmd *DeleteLoginprofile) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteLoginprofile) Params() params.Rule {
-	return params.AllOf(params.Key("username"))
 }
 
 func (cmd *DeleteLoginprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -9251,10 +8824,6 @@ func (cmd *DeleteMfadevice) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteMfadevice) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteMfadevice) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9342,10 +8911,6 @@ func (cmd *DeleteNatgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteNatgateway) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteNatgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9431,10 +8996,6 @@ func NewDeleteNetworkinterface(sess *session.Session, g cloudgraph.GraphAPI, l .
 
 func (cmd *DeleteNetworkinterface) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteNetworkinterface) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteNetworkinterface) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -9545,12 +9106,6 @@ func (cmd *DeletePolicy) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeletePolicy) Params() params.Rule {
-	return params.AllOf(params.Key("arn"),
-		params.Opt("all-versions"),
-	)
-}
-
 func (cmd *DeletePolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9636,10 +9191,6 @@ func NewDeleteQueue(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *DeleteQueue) SetApi(api sqsiface.SQSAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteQueue) Params() params.Rule {
-	return params.AllOf(params.Key("url"))
 }
 
 func (cmd *DeleteQueue) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -9729,10 +9280,6 @@ func (cmd *DeleteRecord) SetApi(api route53iface.Route53API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteRecord) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("ttl"), params.Key("type"), params.Key("value"), params.Key("zone"))
-}
-
 func (cmd *DeleteRecord) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9812,12 +9359,6 @@ func NewDeleteRepository(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 
 func (cmd *DeleteRepository) SetApi(api ecriface.ECRAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteRepository) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("account", "force"),
-	)
 }
 
 func (cmd *DeleteRepository) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -9907,10 +9448,6 @@ func (cmd *DeleteRole) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteRole) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteRole) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -9990,10 +9527,6 @@ func NewDeleteRoute(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *DeleteRoute) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteRoute) Params() params.Rule {
-	return params.AllOf(params.Key("cidr"), params.Key("table"))
 }
 
 func (cmd *DeleteRoute) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -10104,10 +9637,6 @@ func (cmd *DeleteRoutetable) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteRoutetable) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteRoutetable) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -10216,10 +9745,6 @@ func (cmd *DeleteS3object) SetApi(api s3iface.S3API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteS3object) Params() params.Rule {
-	return params.AllOf(params.Key("bucket"), params.Key("name"))
-}
-
 func (cmd *DeleteS3object) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -10305,12 +9830,6 @@ func NewDeleteScalinggroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*l
 
 func (cmd *DeleteScalinggroup) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
-}
-
-func (cmd *DeleteScalinggroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("force"),
-	)
 }
 
 func (cmd *DeleteScalinggroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -10400,10 +9919,6 @@ func (cmd *DeleteScalingpolicy) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteScalingpolicy) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteScalingpolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -10489,10 +10004,6 @@ func NewDeleteSecuritygroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 
 func (cmd *DeleteSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -10603,10 +10114,6 @@ func (cmd *DeleteSnapshot) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteSnapshot) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteSnapshot) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -10715,12 +10222,6 @@ func (cmd *DeleteStack) SetApi(api cloudformationiface.CloudFormationAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteStack) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("retain-resources"),
-	)
-}
-
 func (cmd *DeleteStack) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -10806,10 +10307,6 @@ func NewDeleteSubnet(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *DeleteSubnet) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteSubnet) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteSubnet) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -10920,10 +10417,6 @@ func (cmd *DeleteSubscription) SetApi(api snsiface.SNSAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteSubscription) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteSubscription) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11011,12 +10504,6 @@ func (cmd *DeleteTag) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteTag) Params() params.Rule {
-	return params.AllOf(params.Key("key"), params.Key("resource"),
-		params.Opt("value"),
-	)
-}
-
 func (cmd *DeleteTag) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11092,10 +10579,6 @@ func NewDeleteTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 
 func (cmd *DeleteTargetgroup) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteTargetgroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteTargetgroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -11185,10 +10668,6 @@ func (cmd *DeleteTopic) SetApi(api snsiface.SNSAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteTopic) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteTopic) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11276,10 +10755,6 @@ func (cmd *DeleteUser) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DeleteUser) Params() params.Rule {
-	return params.AllOf(params.Key("name"))
-}
-
 func (cmd *DeleteUser) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11365,10 +10840,6 @@ func NewDeleteVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *DeleteVolume) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DeleteVolume) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *DeleteVolume) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -11479,10 +10950,6 @@ func (cmd *DeleteVpc) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteVpc) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteVpc) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11591,10 +11058,6 @@ func (cmd *DeleteZone) SetApi(api route53iface.Route53API) {
 	cmd.api = api
 }
 
-func (cmd *DeleteZone) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
-}
-
 func (cmd *DeleteZone) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11682,10 +11145,6 @@ func (cmd *DetachAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
 }
 
-func (cmd *DetachAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("action-arn"), params.Key("name"))
-}
-
 func (cmd *DetachAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11767,10 +11226,6 @@ func (cmd *DetachContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
 }
 
-func (cmd *DetachContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("container-name"), params.Key("name"))
-}
-
 func (cmd *DetachContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -11850,10 +11305,6 @@ func NewDetachElasticip(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *DetachElasticip) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DetachElasticip) Params() params.Rule {
-	return params.AllOf(params.Key("association"))
 }
 
 func (cmd *DetachElasticip) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -11964,10 +11415,6 @@ func (cmd *DetachInstance) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
 }
 
-func (cmd *DetachInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("targetgroup"))
-}
-
 func (cmd *DetachInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -12055,10 +11502,6 @@ func (cmd *DetachInstanceprofile) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DetachInstanceprofile) Params() params.Rule {
-	return params.AllOf(params.Key("instance"), params.Key("name"))
-}
-
 func (cmd *DetachInstanceprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -12138,10 +11581,6 @@ func NewDetachInternetgateway(sess *session.Session, g cloudgraph.GraphAPI, l ..
 
 func (cmd *DetachInternetgateway) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DetachInternetgateway) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("vpc"))
 }
 
 func (cmd *DetachInternetgateway) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -12250,10 +11689,6 @@ func NewDetachMfadevice(sess *session.Session, g cloudgraph.GraphAPI, l ...*logg
 
 func (cmd *DetachMfadevice) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *DetachMfadevice) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("user"))
 }
 
 func (cmd *DetachMfadevice) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -12501,10 +11936,6 @@ func (cmd *DetachRole) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *DetachRole) Params() params.Rule {
-	return params.AllOf(params.Key("instanceprofile"), params.Key("name"))
-}
-
 func (cmd *DetachRole) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -12590,10 +12021,6 @@ func NewDetachRoutetable(sess *session.Session, g cloudgraph.GraphAPI, l ...*log
 
 func (cmd *DetachRoutetable) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DetachRoutetable) Params() params.Rule {
-	return params.AllOf(params.Key("association"))
 }
 
 func (cmd *DetachRoutetable) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -12704,10 +12131,6 @@ func (cmd *DetachSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *DetachSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("instance"))
-}
-
 func (cmd *DetachSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -12787,10 +12210,6 @@ func NewDetachUser(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.Lo
 
 func (cmd *DetachUser) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *DetachUser) Params() params.Rule {
-	return params.AllOf(params.Key("group"), params.Key("name"))
 }
 
 func (cmd *DetachUser) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -12878,12 +12297,6 @@ func NewDetachVolume(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *DetachVolume) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *DetachVolume) Params() params.Rule {
-	return params.AllOf(params.Key("device"), params.Key("id"), params.Key("instance"),
-		params.Opt("force"),
-	)
 }
 
 func (cmd *DetachVolume) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -13102,10 +12515,6 @@ func (cmd *StartAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
 }
 
-func (cmd *StartAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("names"))
-}
-
 func (cmd *StartAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -13193,12 +12602,6 @@ func (cmd *StartContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
 }
 
-func (cmd *StartContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("cluster"), params.Key("desired-count"), params.Key("name"), params.Key("type"),
-		params.Opt("deployment-name", "loadbalancer.container-name", "loadbalancer.container-port", "loadbalancer.targetgroup", "role"),
-	)
-}
-
 func (cmd *StartContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -13278,10 +12681,6 @@ func NewStartDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 
 func (cmd *StartDatabase) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
-}
-
-func (cmd *StartDatabase) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StartDatabase) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -13369,10 +12768,6 @@ func NewStartInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger
 
 func (cmd *StartInstance) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *StartInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StartInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -13483,10 +12878,6 @@ func (cmd *StopAlarm) SetApi(api cloudwatchiface.CloudWatchAPI) {
 	cmd.api = api
 }
 
-func (cmd *StopAlarm) Params() params.Rule {
-	return params.AllOf(params.Key("names"))
-}
-
 func (cmd *StopAlarm) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -13574,12 +12965,6 @@ func (cmd *StopContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
 }
 
-func (cmd *StopContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("cluster"), params.Key("type"),
-		params.Opt("deployment-name", "run-arn"),
-	)
-}
-
 func (cmd *StopContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -13659,10 +13044,6 @@ func NewStopDatabase(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *StopDatabase) SetApi(api rdsiface.RDSAPI) {
 	cmd.api = api
-}
-
-func (cmd *StopDatabase) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StopDatabase) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -13750,10 +13131,6 @@ func NewStopInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *StopInstance) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *StopInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StopInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -13864,12 +13241,6 @@ func (cmd *UpdateBucket) SetApi(api s3iface.S3API) {
 	cmd.api = api
 }
 
-func (cmd *UpdateBucket) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("acl", "enforce-https", "index-suffix", "public-website", "redirect-hostname"),
-	)
-}
-
 func (cmd *UpdateBucket) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -13949,12 +13320,6 @@ func NewUpdateContainertask(sess *session.Session, g cloudgraph.GraphAPI, l ...*
 
 func (cmd *UpdateContainertask) SetApi(api ecsiface.ECSAPI) {
 	cmd.api = api
-}
-
-func (cmd *UpdateContainertask) Params() params.Rule {
-	return params.AllOf(params.Key("cluster"), params.Key("deployment-name"),
-		params.Opt("desired-count", "name"),
-	)
 }
 
 func (cmd *UpdateContainertask) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -14044,12 +13409,6 @@ func (cmd *UpdateDistribution) SetApi(api cloudfrontiface.CloudFrontAPI) {
 	cmd.api = api
 }
 
-func (cmd *UpdateDistribution) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("certificate", "comment", "default-file", "domain-aliases", "enable", "forward-cookies", "forward-queries", "https-behaviour", "min-ttl", "origin-domain", "origin-path", "price-class"),
-	)
-}
-
 func (cmd *UpdateDistribution) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14131,12 +13490,6 @@ func (cmd *UpdateImage) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *UpdateImage) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("accounts", "description", "groups", "operation", "product-codes"),
-	)
-}
-
 func (cmd *UpdateImage) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14212,12 +13565,6 @@ func NewUpdateInstance(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 
 func (cmd *UpdateInstance) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
-}
-
-func (cmd *UpdateInstance) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("lock", "type"),
-	)
 }
 
 func (cmd *UpdateInstance) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -14328,12 +13675,6 @@ func (cmd *UpdateLoginprofile) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
 }
 
-func (cmd *UpdateLoginprofile) Params() params.Rule {
-	return params.AllOf(params.Key("password"), params.Key("username"),
-		params.Opt("password-reset"),
-	)
-}
-
 func (cmd *UpdateLoginprofile) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14419,12 +13760,6 @@ func NewUpdatePolicy(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.
 
 func (cmd *UpdatePolicy) SetApi(api iamiface.IAMAPI) {
 	cmd.api = api
-}
-
-func (cmd *UpdatePolicy) Params() params.Rule {
-	return params.AllOf(params.Key("action"), params.Key("arn"), params.Key("effect"), params.Key("resource"),
-		params.Opt("conditions"),
-	)
 }
 
 func (cmd *UpdatePolicy) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -14514,10 +13849,6 @@ func (cmd *UpdateRecord) SetApi(api route53iface.Route53API) {
 	cmd.api = api
 }
 
-func (cmd *UpdateRecord) Params() params.Rule {
-	return params.AllOf(params.Key("name"), params.Key("ttl"), params.Key("type"), params.Key("value"), params.Key("zone"))
-}
-
 func (cmd *UpdateRecord) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14597,12 +13928,6 @@ func NewUpdateS3object(sess *session.Session, g cloudgraph.GraphAPI, l ...*logge
 
 func (cmd *UpdateS3object) SetApi(api s3iface.S3API) {
 	cmd.api = api
-}
-
-func (cmd *UpdateS3object) Params() params.Rule {
-	return params.AllOf(params.Key("acl"), params.Key("bucket"), params.Key("name"),
-		params.Opt("version"),
-	)
 }
 
 func (cmd *UpdateS3object) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -14692,12 +14017,6 @@ func (cmd *UpdateScalinggroup) SetApi(api autoscalingiface.AutoScalingAPI) {
 	cmd.api = api
 }
 
-func (cmd *UpdateScalinggroup) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("cooldown", "desired-capacity", "healthcheck-grace-period", "healthcheck-type", "launchconfiguration", "max-size", "min-size", "new-instances-protected", "subnets"),
-	)
-}
-
 func (cmd *UpdateScalinggroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14785,12 +14104,6 @@ func (cmd *UpdateSecuritygroup) SetApi(api ec2iface.EC2API) {
 	cmd.api = api
 }
 
-func (cmd *UpdateSecuritygroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"), params.Key("protocol"),
-		params.Opt("cidr", "inbound", "outbound", "portrange", "securitygroup"),
-	)
-}
-
 func (cmd *UpdateSecuritygroup) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)
@@ -14866,12 +14179,6 @@ func NewUpdateStack(sess *session.Session, g cloudgraph.GraphAPI, l ...*logger.L
 
 func (cmd *UpdateStack) SetApi(api cloudformationiface.CloudFormationAPI) {
 	cmd.api = api
-}
-
-func (cmd *UpdateStack) Params() params.Rule {
-	return params.AllOf(params.Key("name"),
-		params.Opt("capabilities", "notifications", "parameters", "policy-file", "policy-update-file", "resource-types", "role", "stack-file", "tags", "template-file", "use-previous-template"),
-	)
 }
 
 func (cmd *UpdateStack) Run(ctx, params map[string]interface{}) (interface{}, error) {
@@ -15046,12 +14353,6 @@ func NewUpdateTargetgroup(sess *session.Session, g cloudgraph.GraphAPI, l ...*lo
 
 func (cmd *UpdateTargetgroup) SetApi(api elbv2iface.ELBV2API) {
 	cmd.api = api
-}
-
-func (cmd *UpdateTargetgroup) Params() params.Rule {
-	return params.AllOf(params.Key("id"),
-		params.Opt("deregistrationdelay", "healthcheckinterval", "healthcheckpath", "healthcheckport", "healthcheckprotocol", "healthchecktimeout", "healthythreshold", "matcher", "stickiness", "stickinessduration", "unhealthythreshold"),
-	)
 }
 
 func (cmd *UpdateTargetgroup) Run(ctx, params map[string]interface{}) (interface{}, error) {

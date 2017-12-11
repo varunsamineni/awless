@@ -20,6 +20,7 @@ import (
 	"time"
 
 	"github.com/wallix/awless/cloud/graph"
+	"github.com/wallix/awless/template/params"
 
 	"github.com/aws/aws-sdk-go/service/autoscaling"
 	"github.com/aws/aws-sdk-go/service/autoscaling/autoscalingiface"
@@ -31,17 +32,23 @@ type CreateScalinggroup struct {
 	logger                 *logger.Logger
 	graph                  cloudgraph.GraphAPI
 	api                    autoscalingiface.AutoScalingAPI
-	Name                   *string   `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name" required:""`
-	Launchconfiguration    *string   `awsName:"LaunchConfigurationName" awsType:"awsstr" templateName:"launchconfiguration" required:""`
-	MaxSize                *int64    `awsName:"MaxSize" awsType:"awsint64" templateName:"max-size" required:""`
-	MinSize                *int64    `awsName:"MinSize" awsType:"awsint64" templateName:"min-size" required:""`
-	Subnets                []*string `awsName:"VPCZoneIdentifier" awsType:"awscsvstr" templateName:"subnets" required:""`
+	Name                   *string   `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name"`
+	Launchconfiguration    *string   `awsName:"LaunchConfigurationName" awsType:"awsstr" templateName:"launchconfiguration"`
+	MaxSize                *int64    `awsName:"MaxSize" awsType:"awsint64" templateName:"max-size"`
+	MinSize                *int64    `awsName:"MinSize" awsType:"awsint64" templateName:"min-size"`
+	Subnets                []*string `awsName:"VPCZoneIdentifier" awsType:"awscsvstr" templateName:"subnets"`
 	Cooldown               *int64    `awsName:"DefaultCooldown" awsType:"awsint64" templateName:"cooldown"`
 	DesiredCapacity        *int64    `awsName:"DesiredCapacity" awsType:"awsint64" templateName:"desired-capacity"`
 	HealthcheckGracePeriod *int64    `awsName:"HealthCheckGracePeriod" awsType:"awsint64" templateName:"healthcheck-grace-period"`
 	HealthcheckType        *string   `awsName:"HealthCheckType" awsType:"awsstr" templateName:"healthcheck-type"`
 	NewInstancesProtected  *bool     `awsName:"NewInstancesProtectedFromScaleIn" awsType:"awsbool" templateName:"new-instances-protected"`
 	Targetgroups           []*string `awsName:"TargetGroupARNs" awsType:"awsstringslice" templateName:"targetgroups"`
+}
+
+func (cmd *CreateScalinggroup) Params() params.Rule {
+	return params.AllOf(params.Key("launchconfiguration"), params.Key("max-size"), params.Key("min-size"), params.Key("name"), params.Key("subnets"),
+		params.Opt("cooldown", "desired-capacity", "healthcheck-grace-period", "healthcheck-type", "new-instances-protected", "targetgroups"),
+	)
 }
 
 func (cmd *CreateScalinggroup) ExtractResult(i interface{}) string {
@@ -53,7 +60,7 @@ type UpdateScalinggroup struct {
 	logger                 *logger.Logger
 	graph                  cloudgraph.GraphAPI
 	api                    autoscalingiface.AutoScalingAPI
-	Name                   *string   `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name" required:""`
+	Name                   *string   `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name"`
 	Cooldown               *int64    `awsName:"DefaultCooldown" awsType:"awsint64" templateName:"cooldown"`
 	DesiredCapacity        *int64    `awsName:"DesiredCapacity" awsType:"awsint64" templateName:"desired-capacity"`
 	HealthcheckGracePeriod *int64    `awsName:"HealthCheckGracePeriod" awsType:"awsint64" templateName:"healthcheck-grace-period"`
@@ -65,8 +72,10 @@ type UpdateScalinggroup struct {
 	Subnets                []*string `awsName:"VPCZoneIdentifier" awsType:"awscsvstr" templateName:"subnets"`
 }
 
-func (cmd *UpdateScalinggroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *UpdateScalinggroup) Params() params.Rule {
+	return params.AllOf(params.Key("name"),
+		params.Opt("cooldown", "desired-capacity", "healthcheck-grace-period", "healthcheck-type", "launchconfiguration", "max-size", "min-size", "new-instances-protected", "subnets"),
+	)
 }
 
 type DeleteScalinggroup struct {
@@ -74,12 +83,14 @@ type DeleteScalinggroup struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    autoscalingiface.AutoScalingAPI
-	Name   *string `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name" required:""`
+	Name   *string `awsName:"AutoScalingGroupName" awsType:"awsstr" templateName:"name"`
 	Force  *bool   `awsName:"ForceDelete" awsType:"awsbool" templateName:"force"`
 }
 
-func (cmd *DeleteScalinggroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DeleteScalinggroup) Params() params.Rule {
+	return params.AllOf(params.Key("name"),
+		params.Opt("force"),
+	)
 }
 
 type CheckScalinggroup struct {
@@ -87,13 +98,13 @@ type CheckScalinggroup struct {
 	logger  *logger.Logger
 	graph   cloudgraph.GraphAPI
 	api     autoscalingiface.AutoScalingAPI
-	Name    *string `templateName:"name" required:""`
-	Count   *int64  `templateName:"count" required:""`
-	Timeout *int64  `templateName:"timeout" required:""`
+	Name    *string `templateName:"name"`
+	Count   *int64  `templateName:"count"`
+	Timeout *int64  `templateName:"timeout"`
 }
 
-func (cmd *CheckScalinggroup) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *CheckScalinggroup) Params() params.Rule {
+	return params.AllOf(params.Key("count"), params.Key("name"), params.Key("timeout"))
 }
 
 func (sg *CheckScalinggroup) ManualRun(map[string]interface{}) (interface{}, error) {

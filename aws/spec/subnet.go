@@ -86,18 +86,14 @@ func (cmd *UpdateSubnet) Params() params.Rule {
 	return params.AllOf(params.Key("id"), params.Opt("public"))
 }
 
-func (cmd *UpdateSubnet) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
-}
-
 type DeleteSubnet struct {
 	_      string `action:"delete" entity:"subnet" awsAPI:"ec2" awsCall:"DeleteSubnet" awsInput:"ec2.DeleteSubnetInput" awsOutput:"ec2.DeleteSubnetOutput" awsDryRun:""`
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
-	Id     *string `awsName:"SubnetId" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"SubnetId" awsType:"awsstr" templateName:"id"`
 }
 
-func (cmd *DeleteSubnet) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DeleteSubnet) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }

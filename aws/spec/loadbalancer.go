@@ -59,11 +59,11 @@ type DeleteLoadbalancer struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    elbv2iface.ELBV2API
-	Id     *string `awsName:"LoadBalancerArn" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"LoadBalancerArn" awsType:"awsstr" templateName:"id"`
 }
 
-func (cmd *DeleteLoadbalancer) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DeleteLoadbalancer) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }
 
 type CheckLoadbalancer struct {
@@ -71,13 +71,13 @@ type CheckLoadbalancer struct {
 	logger  *logger.Logger
 	graph   cloudgraph.GraphAPI
 	api     elbv2iface.ELBV2API
-	Id      *string `templateName:"id" required:""`
-	State   *string `templateName:"state" required:""`
-	Timeout *int64  `templateName:"timeout" required:""`
+	Id      *string `templateName:"id"`
+	State   *string `templateName:"state"`
+	Timeout *int64  `templateName:"timeout"`
 }
 
-func (cmd *CheckLoadbalancer) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *CheckLoadbalancer) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckLoadbalancer) Validate_State() error {

@@ -276,18 +276,6 @@ func (cmd *{{ $cmdName }}) SetApi(api {{$tag.API}}iface.{{ ApiToInterface $tag.A
 	cmd.api = api
 }
 
-{{ if $tag.HasRequiredParams }}
-func (cmd *{{ $cmdName }}) Params() params.Rule {
-	return params.AllOf(
-		{{- range $param := $tag.RequiredParamsKey }}params.Key("{{ $param }}"),{{- end}}
-		{{- $length := len $tag.ExtrasParamsKey }} {{- if gt $length 0 }}
-		params.Opt({{- range $param := $tag.ExtrasParamsKey }}"{{ $param }}",{{- end}}),
-		{{- end }}
-	)
-}
-{{ end }}
-
-
 func (cmd *{{ $cmdName }}) Run(ctx, params map[string]interface{}) (interface{}, error) {
 	if err := cmd.inject(params); err != nil {
 		return nil, fmt.Errorf("cannot set params on command struct: %s", err)

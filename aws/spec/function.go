@@ -21,6 +21,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/lambda/lambdaiface"
 	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/logger"
+	"github.com/wallix/awless/template/params"
 )
 
 type CreateFunction struct {
@@ -28,10 +29,10 @@ type CreateFunction struct {
 	logger        *logger.Logger
 	graph         cloudgraph.GraphAPI
 	api           lambdaiface.LambdaAPI
-	Name          *string `awsName:"FunctionName" awsType:"awsstr" templateName:"name" required:""`
-	Handler       *string `awsName:"Handler" awsType:"awsstr" templateName:"handler" required:""`
-	Role          *string `awsName:"Role" awsType:"awsstr" templateName:"role" required:""`
-	Runtime       *string `awsName:"Runtime" awsType:"awsstr" templateName:"runtime" required:""`
+	Name          *string `awsName:"FunctionName" awsType:"awsstr" templateName:"name"`
+	Handler       *string `awsName:"Handler" awsType:"awsstr" templateName:"handler"`
+	Role          *string `awsName:"Role" awsType:"awsstr" templateName:"role"`
+	Runtime       *string `awsName:"Runtime" awsType:"awsstr" templateName:"runtime"`
 	Bucket        *string `awsName:"Code.S3Bucket" awsType:"awsstr" templateName:"bucket"`
 	Object        *string `awsName:"Code.S3Key" awsType:"awsstr" templateName:"object"`
 	Objectversion *string `awsName:"Code.S3ObjectVersion" awsType:"awsstr" templateName:"objectversion"`
@@ -40,6 +41,12 @@ type CreateFunction struct {
 	Memory        *int64  `awsName:"MemorySize" awsType:"awsint64" templateName:"memory"`
 	Publish       *bool   `awsName:"Publish" awsType:"awsbool" templateName:"publish"`
 	Timeout       *int64  `awsName:"Timeout" awsType:"awsint64" templateName:"timeout"`
+}
+
+func (cmd *CreateFunction) Params() params.Rule {
+	return params.AllOf(params.Key("handler"), params.Key("name"), params.Key("role"), params.Key("runtime"),
+		params.Opt("bucket", "description", "memory", "object", "objectversion", "publish", "timeout", "zipfile"),
+	)
 }
 
 func (cmd *CreateFunction) ExtractResult(i interface{}) string {
@@ -51,10 +58,12 @@ type DeleteFunction struct {
 	logger  *logger.Logger
 	graph   cloudgraph.GraphAPI
 	api     lambdaiface.LambdaAPI
-	Id      *string `awsName:"FunctionName" awsType:"awsstr" templateName:"id" required:""`
+	Id      *string `awsName:"FunctionName" awsType:"awsstr" templateName:"id"`
 	Version *string `awsName:"Qualifier" awsType:"awsstr" templateName:"version"`
 }
 
-func (cmd *DeleteFunction) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DeleteFunction) Params() params.Rule {
+	return params.AllOf(params.Key("id"),
+		params.Opt("version"),
+	)
 }

@@ -100,13 +100,15 @@ type UpdateInstance struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
-	Id     *string `awsName:"InstanceId" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"InstanceId" awsType:"awsstr" templateName:"id"`
 	Type   *string `awsName:"InstanceType.Value" awsType:"awsstr" templateName:"type"`
 	Lock   *bool   `awsName:"DisableApiTermination" awsType:"awsboolattribute" templateName:"lock"`
 }
 
-func (cmd *UpdateInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *UpdateInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"),
+		params.Opt("lock", "type"),
+	)
 }
 
 type DeleteInstance struct {
@@ -132,20 +134,16 @@ func (cmd *DeleteInstance) Params() params.Rule {
 	return params.OnlyOneOf(params.Key("ids"), params.Key("id"))
 }
 
-func (cmd *DeleteInstance) ValidateParams(params []string) ([]string, error) {
-	return paramRule{tree: oneOf(node("ids"), node("id"))}.verify(params)
-}
-
 type StartInstance struct {
 	_      string `action:"start" entity:"instance" awsAPI:"ec2" awsCall:"StartInstances" awsInput:"ec2.StartInstancesInput" awsOutput:"ec2.StartInstancesOutput" awsDryRun:""`
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
-	Id     []*string `awsName:"InstanceIds" awsType:"awsstringslice" templateName:"id" required:""`
+	Id     []*string `awsName:"InstanceIds" awsType:"awsstringslice" templateName:"id"`
 }
 
-func (cmd *StartInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *StartInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StartInstance) ExtractResult(i interface{}) string {
@@ -157,11 +155,11 @@ type StopInstance struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    ec2iface.EC2API
-	Id     []*string `awsName:"InstanceIds" awsType:"awsstringslice" templateName:"id" required:""`
+	Id     []*string `awsName:"InstanceIds" awsType:"awsstringslice" templateName:"id"`
 }
 
-func (cmd *StopInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *StopInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }
 
 func (cmd *StopInstance) ExtractResult(i interface{}) string {
@@ -177,13 +175,13 @@ type CheckInstance struct {
 	logger  *logger.Logger
 	graph   cloudgraph.GraphAPI
 	api     ec2iface.EC2API
-	Id      *string `templateName:"id" required:""`
-	State   *string `templateName:"state" required:""`
-	Timeout *int64  `templateName:"timeout" required:""`
+	Id      *string `templateName:"id"`
+	State   *string `templateName:"state"`
+	Timeout *int64  `templateName:"timeout"`
 }
 
-func (cmd *CheckInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *CheckInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckInstance) Validate_State() error {
@@ -233,13 +231,15 @@ type AttachInstance struct {
 	logger      *logger.Logger
 	graph       cloudgraph.GraphAPI
 	api         elbv2iface.ELBV2API
-	Targetgroup *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"targetgroup" required:""`
-	Id          *string `awsName:"Targets[0]Id" awsType:"awsslicestruct" templateName:"id" required:""`
+	Targetgroup *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"targetgroup"`
+	Id          *string `awsName:"Targets[0]Id" awsType:"awsslicestruct" templateName:"id"`
 	Port        *int64  `awsName:"Targets[0]Port" awsType:"awsslicestructint64" templateName:"port"`
 }
 
-func (cmd *AttachInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *AttachInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Key("targetgroup"),
+		params.Opt("port"),
+	)
 }
 
 type DetachInstance struct {
@@ -247,10 +247,10 @@ type DetachInstance struct {
 	logger      *logger.Logger
 	graph       cloudgraph.GraphAPI
 	api         elbv2iface.ELBV2API
-	Targetgroup *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"targetgroup" required:""`
-	Id          *string `awsName:"Targets[0]Id" awsType:"awsslicestruct" templateName:"id" required:""`
+	Targetgroup *string `awsName:"TargetGroupArn" awsType:"awsstr" templateName:"targetgroup"`
+	Id          *string `awsName:"Targets[0]Id" awsType:"awsslicestruct" templateName:"id"`
 }
 
-func (cmd *DetachInstance) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DetachInstance) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Key("targetgroup"))
 }

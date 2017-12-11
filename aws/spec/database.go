@@ -191,13 +191,15 @@ type DeleteDatabase struct {
 	logger       *logger.Logger
 	graph        cloudgraph.GraphAPI
 	api          rdsiface.RDSAPI
-	Id           *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id" required:""`
+	Id           *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id"`
 	SkipSnapshot *bool   `awsName:"SkipFinalSnapshot" awsType:"awsbool" templateName:"skip-snapshot"`
 	Snapshot     *string `awsName:"FinalDBSnapshotIdentifier" awsType:"awsstr" templateName:"snapshot"`
 }
 
-func (cmd *DeleteDatabase) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *DeleteDatabase) Params() params.Rule {
+	return params.AllOf(params.Key("id"),
+		params.Opt("skip-snapshot", "snapshot"),
+	)
 }
 
 type CheckDatabase struct {
@@ -205,13 +207,13 @@ type CheckDatabase struct {
 	logger  *logger.Logger
 	graph   cloudgraph.GraphAPI
 	api     rdsiface.RDSAPI
-	Id      *string `templateName:"id" required:""`
-	State   *string `templateName:"state" required:""`
-	Timeout *int64  `templateName:"timeout" required:""`
+	Id      *string `templateName:"id"`
+	State   *string `templateName:"state"`
+	Timeout *int64  `templateName:"timeout"`
 }
 
-func (cmd *CheckDatabase) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *CheckDatabase) Params() params.Rule {
+	return params.AllOf(params.Key("id"), params.Key("state"), params.Key("timeout"))
 }
 
 func (cmd *CheckDatabase) Validate_State() error {
@@ -273,11 +275,11 @@ type StartDatabase struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    rdsiface.RDSAPI
-	Id     *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id"`
 }
 
-func (cmd *StartDatabase) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *StartDatabase) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }
 
 type StopDatabase struct {
@@ -285,9 +287,9 @@ type StopDatabase struct {
 	logger *logger.Logger
 	graph  cloudgraph.GraphAPI
 	api    rdsiface.RDSAPI
-	Id     *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id" required:""`
+	Id     *string `awsName:"DBInstanceIdentifier" awsType:"awsstr" templateName:"id"`
 }
 
-func (cmd *StopDatabase) ValidateParams(params []string) ([]string, error) {
-	return validateParams(cmd, params)
+func (cmd *StopDatabase) Params() params.Rule {
+	return params.AllOf(params.Key("id"))
 }
