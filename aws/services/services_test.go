@@ -43,7 +43,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/wallix/awless/aws/fetch"
 	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/cloud/graph"
 	p "github.com/wallix/awless/cloud/properties"
+	"github.com/wallix/awless/cloud/rdf"
 	"github.com/wallix/awless/fetch"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/graph/resourcetest"
@@ -187,7 +189,7 @@ func TestBuildAccessRdfGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("policy", "group", "role", "user", cloud.MFADevice)
+	resources, err := g.Find(cloudgraph.NewQuery("policy", "group", "role", "user", cloud.MFADevice))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,7 +201,7 @@ func TestBuildAccessRdfGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"managed_policy_1": resourcetest.Policy("managed_policy_1").Prop(p.Name, "nmanaged_policy_1").Prop(p.Type, "Customer Managed").Prop(p.Attached, true).Build(),
 		"managed_policy_2": resourcetest.Policy("managed_policy_2").Prop(p.Name, "nmanaged_policy_2").Prop(p.Type, "Customer Managed").Prop(p.Attached, false).Prop(p.Document, policyDoc).Build(),
 		"managed_policy_3": resourcetest.Policy("managed_policy_3").Prop(p.Name, "nmanaged_policy_3").Prop(p.Arn, "arn:aws:iam::aws:policy/managed_policy_3").Prop(p.Type, "AWS Managed").Prop(p.Attached, true).Build(),
@@ -569,7 +571,7 @@ func TestBuildInfraRdfGraph(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resources, err := g.GetAllResources("region", "instance", "vpc", "securitygroup", "subnet", "keypair", "internetgateway", cloud.NatGateway, "routetable", "loadbalancer", "targetgroup", "listener", "launchconfiguration", "scalinggroup", "image", "availabilityzone", "repository", cloud.ContainerCluster, cloud.ContainerTask, cloud.Container, cloud.ContainerInstance, cloud.NetworkInterface, cloud.Certificate)
+	resources, err := g.Find(cloudgraph.NewQuery("region", "instance", "vpc", "securitygroup", "subnet", "keypair", "internetgateway", cloud.NatGateway, "routetable", "loadbalancer", "targetgroup", "listener", "launchconfiguration", "scalinggroup", "image", "availabilityzone", "repository", cloud.ContainerCluster, cloud.ContainerTask, cloud.Container, cloud.ContainerInstance, cloud.NetworkInterface, cloud.Certificate))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -619,7 +621,7 @@ func TestBuildInfraRdfGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"eu-west-1": resourcetest.Region("eu-west-1").Build(),
 		"inst_1":    resourcetest.Instance("inst_1").Prop(p.Subnet, "sub_1").Prop(p.Vpc, "vpc_1").Prop(p.Name, "instance1-name").Prop(p.Tags, []string{"Name=instance1-name"}).Build(),
 		"inst_2":    resourcetest.Instance("inst_2").Prop(p.Subnet, "sub_2").Prop(p.Vpc, "vpc_1").Prop(p.SecurityGroups, []string{"securitygroup_1"}).Build(),
@@ -789,12 +791,12 @@ func TestBuildStorageRdfGraph(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	resources, err := g.GetAllResources("region", "bucket")
+	resources, err := g.Find(cloudgraph.NewQuery("region", "bucket"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"eu-west-1":   resourcetest.Region("eu-west-1").Build(),
 		"bucket_eu_1": resourcetest.Bucket("bucket_eu_1").Prop(p.Grants, []*graph.Grant{{Grantee: graph.Grantee{GranteeID: "usr_2"}, Permission: "Write"}}).Build(),
 		"bucket_eu_2": resourcetest.Bucket("bucket_eu_2").Prop(p.Grants, []*graph.Grant{{Grantee: graph.Grantee{GranteeID: "usr_1"}, Permission: "Write"}}).Build(),
@@ -838,7 +840,7 @@ func TestBuildDnsRdfGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("zone", "record")
+	resources, err := g.Find(cloudgraph.NewQuery("zone", "record"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -849,7 +851,7 @@ func TestBuildDnsRdfGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"/hostedzone/12345": resourcetest.Zone("/hostedzone/12345").Prop(p.Name, "my.first.domain").Build(),
 		"/hostedzone/23456": resourcetest.Zone("/hostedzone/23456").Prop(p.Name, "my.second.domain").Build(),
 		"/hostedzone/34567": resourcetest.Zone("/hostedzone/34567").Prop(p.Name, "my.third.domain").Build(),
@@ -907,12 +909,12 @@ func TestBuildNotificationGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("subscription", "topic")
+	resources, err := g.Find(cloudgraph.NewQuery("subscription", "topic"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"endpoint_1":  resourcetest.Subscription("endpoint_1").Prop(p.Endpoint, "endpoint_1").Build(),
 		"endpoint_2":  resourcetest.Subscription("endpoint_2").Prop(p.Endpoint, "endpoint_2").Prop(p.Owner, "subscr_owner").Prop(p.Protocol, "subscr_prot").Prop(p.Arn, "subscr_arn").Prop(p.Topic, "topic_arn_2").Build(),
 		"endpoint_3":  resourcetest.Subscription("endpoint_3").Prop(p.Endpoint, "endpoint_3").Prop(p.Topic, "topic_arn_2").Build(),
@@ -928,12 +930,12 @@ func TestBuildNotificationGraph(t *testing.T) {
 
 	compareResources(t, g, resources, expected, expectedChildren, expectedAppliedOn)
 
-	resources, err = g.GetAllResources("queue")
+	resources, err = g.Find(cloudgraph.NewQuery("queue"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	expected = map[string]*graph.Resource{
+	expected = map[string]cloudgraph.Resource{
 		"queue_1": resourcetest.Queue("queue_1").Build(),
 		"queue_2": resourcetest.Queue("queue_2").Prop(p.ApproximateMessageCount, 4).Prop(p.Created, time.Unix(1494419259, 0).UTC()).Prop(p.Modified, time.Unix(1494332859, 0).UTC()).Prop(p.Arn, "queue_2_arn").Prop(p.Delay, 15).Build(),
 		"queue_3": resourcetest.Queue("queue_3").Prop(p.ApproximateMessageCount, 12).Build(),
@@ -977,12 +979,12 @@ func TestBuildLambdaGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("function")
+	resources, err := g.Find(cloudgraph.NewQuery("function"))
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"func_1_arn": resourcetest.Function("func_1_arn").Prop(p.Arn, "func_1_arn").Build(),
 		"func_2_arn": resourcetest.Function("func_2_arn").Prop(p.Arn, "func_2_arn").Prop(p.Name, "func_2_name").Prop(p.Hash, "abcdef123456789").Prop(p.Size, 1234).
 			Prop(p.Description, "my function desc").Prop(p.Handler, "handl").Prop(p.Modified, time.Unix(1136214245, 0).UTC()).Prop(p.Memory, 1234).Prop(p.Role, "role").
@@ -1037,7 +1039,7 @@ func TestBuildMonitoringGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("metric", "alarm")
+	resources, err := g.Find(cloudgraph.NewQuery("metric", "alarm"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1062,7 +1064,7 @@ func TestBuildMonitoringGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"awls-4ba90752": resourcetest.Metric("awls-4ba90752").Prop(p.Name, "metric_1").Prop(p.Namespace, "namespace_1").Build(),
 		"awls-4baa0753": resourcetest.Metric("awls-4baa0753").Prop(p.Name, "metric_2").Prop(p.Namespace, "namespace_1").Prop(p.Dimensions, []*graph.KeyValue{{KeyName: "first", Value: "dimension"}, {KeyName: "second", Value: "dimension"}}).Build(),
 		"awls-4bb20753": resourcetest.Metric("awls-4bb20753").Prop(p.Name, "metric_1").Prop(p.Namespace, "namespace_2").Build(),
@@ -1146,7 +1148,7 @@ func TestBuildCdnGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("distribution")
+	resources, err := g.Find(cloudgraph.NewQuery("distribution"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1163,7 +1165,7 @@ func TestBuildCdnGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"ds_1": resourcetest.Distribution("ds_1").
 			Prop(p.Arn, "ds_1_arn").
 			Prop(p.Aliases, []string{"cname1.domain.name", "cname2.domain.name"}).
@@ -1235,7 +1237,7 @@ func TestBuildCloudFormationGraph(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err := g.GetAllResources("stack")
+	resources, err := g.Find(cloudgraph.NewQuery("stack"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1265,7 +1267,7 @@ func TestBuildCloudFormationGraph(t *testing.T) {
 		}
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"id_1": resourcetest.Stack("id_1").
 			Prop(p.Name, "name_1").
 			Prop(p.Capabilities, []string{"cap_1", "cap_2", "cap_3"}).
@@ -1309,11 +1311,11 @@ func TestBuildEmptyRdfGraphWhenNoData(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	expected := map[string]*graph.Resource{
+	expected := map[string]cloudgraph.Resource{
 		"eu-west-1": resourcetest.Region("eu-west-1").Build(),
 	}
 	expectedChildren, expectedAppliedOn := map[string][]string{}, map[string][]string{}
-	resources, err := g.GetAllResources("region")
+	resources, err := g.Find(cloudgraph.NewQuery("region"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1339,7 +1341,7 @@ func TestBuildEmptyRdfGraphWhenNoData(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	resources, err = g.GetAllResources("region")
+	resources, err = g.Find(cloudgraph.NewQuery("region"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1347,10 +1349,10 @@ func TestBuildEmptyRdfGraphWhenNoData(t *testing.T) {
 	compareResources(t, g, resources, expected, expectedChildren, expectedAppliedOn)
 }
 
-func mustGetChildrenId(g *graph.Graph, res *graph.Resource) []string {
+func mustGetChildrenId(g cloudgraph.GraphAPI, res cloudgraph.Resource) []string {
 	var collect []string
 
-	err := g.Accept(&graph.ChildrenVisitor{From: res, IncludeFrom: false, Each: func(res *graph.Resource, depth int) error {
+	err := g.AcceptVisitor(&graph.ChildrenVisitor{From: res, IncludeFrom: false, Each: func(res cloudgraph.Resource, depth int) error {
 		if depth == 1 {
 			collect = append(collect, res.Id())
 		}
@@ -1362,19 +1364,15 @@ func mustGetChildrenId(g *graph.Graph, res *graph.Resource) []string {
 	return collect
 }
 
-func mustGetAppliedOnId(g *graph.Graph, res *graph.Resource) []string {
-	resources, err := g.ListResourcesAppliedOn(res)
-	if err != nil {
-		panic(err)
-	}
+func mustGetAppliedOnId(g cloudgraph.GraphAPI, res cloudgraph.Resource) []string {
 	var ids []string
-	for _, r := range resources {
+	for _, r := range res.Relations(rdf.ApplyOn) {
 		ids = append(ids, r.Id())
 	}
 	return ids
 }
 
-func compareResources(t *testing.T, g *graph.Graph, resources []*graph.Resource, expected map[string]*graph.Resource, expectedChildren, expectedAppliedOn map[string][]string) {
+func compareResources(t *testing.T, g cloudgraph.GraphAPI, resources []cloudgraph.Resource, expected map[string]cloudgraph.Resource, expectedChildren, expectedAppliedOn map[string][]string) {
 	t.Helper()
 	if got, want := len(resources), len(expected); got != want {
 		t.Errorf("got %d, want %d", got, want)

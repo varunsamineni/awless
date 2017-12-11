@@ -1,12 +1,9 @@
 /*
 Copyright 2017 WALLIX
-
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
-
     http://www.apache.org/licenses/LICENSE-2.0
-
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -30,6 +27,7 @@ import (
 	"runtime"
 
 	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
 	"github.com/wallix/awless/sync/repo"
@@ -41,7 +39,7 @@ var DefaultSyncer Syncer
 
 type Syncer interface {
 	repo.Repo
-	Sync(...cloud.Service) (map[string]*graph.Graph, error)
+	Sync(...cloud.Service) (map[string]cloudgraph.GraphAPI, error)
 }
 
 type noopsyncer struct {
@@ -50,8 +48,8 @@ type noopsyncer struct {
 
 func NoOpSyncer() Syncer { return new(noopsyncer) }
 
-func (s *noopsyncer) Sync(services ...cloud.Service) (map[string]*graph.Graph, error) {
-	return map[string]*graph.Graph{}, nil
+func (s *noopsyncer) Sync(services ...cloud.Service) (map[string]cloudgraph.GraphAPI, error) {
+	return map[string]cloudgraph.GraphAPI{}, nil
 }
 
 type syncer struct {
@@ -76,12 +74,12 @@ func NewSyncer(l ...*logger.Logger) Syncer {
 	return s
 }
 
-func (s *syncer) Sync(services ...cloud.Service) (map[string]*graph.Graph, error) {
+func (s *syncer) Sync(services ...cloud.Service) (map[string]cloudgraph.GraphAPI, error) {
 	var workers gosync.WaitGroup
 
 	type result struct {
 		service cloud.Service
-		gph     *graph.Graph
+		gph     cloudgraph.GraphAPI
 		start   time.Time
 		err     error
 	}
@@ -108,7 +106,7 @@ func (s *syncer) Sync(services ...cloud.Service) (map[string]*graph.Graph, error
 	}()
 
 	var allErrors []error
-	graphs := make(map[string]*graph.Graph)
+	graphs := make(map[string]cloudgraph.GraphAPI)
 	servicesByName := make(map[string]cloud.Service)
 Loop:
 	for {

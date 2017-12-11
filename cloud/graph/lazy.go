@@ -15,7 +15,10 @@ limitations under the License.
 */
 package cloudgraph
 
-import "sync"
+import (
+	"io"
+	"sync"
+)
 
 type LazyGraph struct {
 	LoadingFunc func() GraphAPI
@@ -23,9 +26,23 @@ type LazyGraph struct {
 	api         GraphAPI
 }
 
-func (g *LazyGraph) FindOne(q Query) (Resource, error) {
+func (g *LazyGraph) load() {
 	g.once.Do(func() {
 		g.api = g.LoadingFunc()
 	})
+}
+
+func (g *LazyGraph) Find(q Query) ([]Resource, error) {
+	g.load()
+	return g.api.Find(q)
+}
+
+func (g *LazyGraph) FindOne(q Query) (Resource, error) {
+	g.load()
 	return g.api.FindOne(q)
+}
+
+func (g *LazyGraph) MarshalTo(w io.Writer) error {
+	g.load()
+	return g.api.MarshalTo(w)
 }

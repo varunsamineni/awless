@@ -16,32 +16,44 @@ limitations under the License.
 
 package cloudgraph
 
+import "io"
+
 type GraphAPI interface {
+	Find(Query) ([]Resource, error)
 	FindOne(Query) (Resource, error)
+	Accept(v Visitor) error
+	MarshalTo(w io.Writer) error
+}
+
+type Visitor interface {
+	Visit(GraphAPI) error
 }
 
 type Resource interface {
 	Type() string
 	Id() string
+	Properties() map[string]interface{}
 	Property(string) (interface{}, bool)
+	Meta(string) (interface{}, bool)
 	Relations(string) []Resource
+	Same(Resource) bool
 }
 
-type Query struct {
-	ResourceType   string
-	PropertyValues []propertyValue
-}
-
-type propertyValue struct {
-	Name  string
-	Value interface{}
-}
-
-func NewQuery(resourceType string) Query {
+func NewQuery(resourceType ...string) Query {
 	return Query{ResourceType: resourceType}
 }
 
 func (q Query) Property(name string, value interface{}) Query {
 	q.PropertyValues = append(q.PropertyValues, propertyValue{Name: name, Value: value})
 	return q
+}
+
+type Query struct {
+	ResourceType   []string
+	PropertyValues []propertyValue
+}
+
+type propertyValue struct {
+	Name  string
+	Value interface{}
 }

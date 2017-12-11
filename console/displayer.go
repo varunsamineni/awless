@@ -30,6 +30,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/olekukonko/tablewriter"
 	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/graph"
 )
 
@@ -60,7 +61,7 @@ type Builder struct {
 	reverseSort       bool
 	maxwidth          int
 	dataSource        interface{}
-	root              *graph.Resource
+	root              cloudgraph.Resource
 	noHeaders         bool
 }
 
@@ -202,9 +203,9 @@ func (b *Builder) Build() (Displayer, error) {
 			dis.setGraph(filteredGraph)
 			return dis, nil
 		}
-	case *graph.Resource:
+	case cloudgraph.Resource:
 		dis := &tableResourceDisplayer{columnDefinitions: b.columnDefinitions, maxwidth: b.maxwidth}
-		dis.SetResource(b.dataSource.(*graph.Resource))
+		dis.SetResource(b.dataSource.(cloudgraph.Resource))
 		return dis, nil
 	case *graph.Diff:
 		base := fromDiffDisplayer{root: b.root}
@@ -361,7 +362,7 @@ func WithRdfType(rdfType string) optsFn {
 	}
 }
 
-func WithRootNode(root *graph.Resource) optsFn {
+func WithRootNode(root cloudgraph.Resource) optsFn {
 	return func(b *Builder) *Builder {
 		b.root = root
 		return b
@@ -732,7 +733,7 @@ type multiResourcesJSONDisplayer struct {
 }
 
 func (d *multiResourcesJSONDisplayer) Print(w io.Writer) error {
-	var resources []*graph.Resource
+	var resources []cloudgraph.Resource
 	var err error
 
 	all := make(map[string]interface{})
@@ -757,7 +758,7 @@ func (d *multiResourcesJSONDisplayer) Print(w io.Writer) error {
 }
 
 type fromDiffDisplayer struct {
-	root *graph.Resource
+	root cloudgraph.Resource
 	diff *graph.Diff
 }
 
@@ -772,10 +773,11 @@ type diffTableDisplayer struct {
 func (d *diffTableDisplayer) Print(w io.Writer) error {
 	var values table
 
-	fromCommons := make(map[string]*graph.Resource)
-	toCommons := make(map[string]*graph.Resource)
-	each := func(res *graph.Resource, distance int) error {
-		switch res.Meta["diff"] {
+	fromCommons := make(map[string]cloudgraph.Resource)
+	toCommons := make(map[string]cloudgraph.Resource)
+	each := func(res cloudgraph.Resource, distance int) error {
+		diff, _ := res.Meta("diff")
+		switch diff {
 		case "extra":
 			values = append(values, []interface{}{
 				res.Type(), color.New(color.FgRed).SprintFunc()("- " + nameOrID(res)), "", "",
@@ -790,7 +792,7 @@ func (d *diffTableDisplayer) Print(w io.Writer) error {
 		return err
 	}
 
-	each = func(res *graph.Resource, distance int) error {
+	each = func(res cloudgraph.Resource, distance int) error {
 		switch res.Meta["diff"] {
 		case "extra":
 			values = append(values, []interface{}{
@@ -856,10 +858,10 @@ type diffTreeDisplayer struct {
 func (d *diffTreeDisplayer) Print(w io.Writer) error {
 	g := graph.NewGraph()
 
-	each := func(res *graph.Resource, distance int) error {
+	each := func(res cloudgraph.Resource, distance int) error {
 		switch res.Meta["diff"] {
 		case "extra", "missing":
-			var parents []*graph.Resource
+			var parents []cloudgraph.Resource
 			err := d.diff.MergedGraph().Accept(&graph.ParentsVisitor{From: res, Each: graph.VisitorCollectFunc(&parents)})
 			if err != nil {
 				return err
@@ -886,7 +888,7 @@ func (d *diffTreeDisplayer) Print(w io.Writer) error {
 		return err
 	}
 
-	each = func(res *graph.Resource, distance int) error {
+	each = func(res cloudgraph.Resource, distance int) error {
 		tabs := strings.Repeat("\t", distance)
 
 		switch res.Meta["diff"] {
@@ -1055,11 +1057,11 @@ func colWidthNoWraping(j int, t table, h ColumnDefinition, sortSymbol string) in
 	return max
 }
 
-func nameOrID(res *graph.Resource) string {
-	if name, ok := res.Properties()["Name"]; ok && name != "" {
+func nameOrID(res cloudgraph.Resource) string {
+	if name, ok := res.Property("Name"); ok && name != "" {
 		return fmt.Sprint(name)
 	}
-	if id, ok := res.Properties()["Id"]; ok && id != "" {
+	if id, ok := res.Property("Id"); ok && id != "" {
 		return fmt.Sprint(id)
 	}
 	return res.Id()

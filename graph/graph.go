@@ -157,7 +157,40 @@ func (g *Graph) ResolveResources(resolvers ...Resolver) ([]*Resource, error) {
 	return resources, nil
 }
 
+func (g *Graph) Find(q cloudgraph.Query) ([]cloudgraph.Resource, error) {
+	if len(q.ResourceType) != 1 {
+		return nil, fmt.Errorf("invalid query: find queries must have exactly one resource type, got %d", len(q.ResourceType))
+	}
+	resourceType := q.ResourceType[0]
+
+	var filters []FilterFn
+	for _, prop := range q.PropertyValues {
+		filters = append(filters, func(r *Resource) bool {
+			v, _ := r.Property(prop.Name)
+			return reflect.DeepEqual(v, prop.Value)
+		})
+	}
+	filtered, err := g.Filter(resourceType, filters...)
+	if err != nil {
+		return nil, err
+	}
+	resources, err := filtered.GetAllResources(resourceType)
+	if err != nil {
+		return nil, err
+	}
+	var res []cloudgraph.Resource
+	for _, r := range resources {
+		res = append(res, r)
+	}
+	return res, nil
+}
+
 func (g *Graph) FindOne(q cloudgraph.Query) (cloudgraph.Resource, error) {
+	if len(q.ResourceType) != 1 {
+		return nil, fmt.Errorf("invalid query: find-one queries must have exactly one resource type, got %d", len(q.ResourceType))
+	}
+	resourceType := q.ResourceType[0]
+
 	var resources []*Resource
 	var filters []FilterFn
 	for _, prop := range q.PropertyValues {
@@ -166,11 +199,11 @@ func (g *Graph) FindOne(q cloudgraph.Query) (cloudgraph.Resource, error) {
 			return reflect.DeepEqual(v, prop.Value)
 		})
 	}
-	filtered, err := g.Filter(q.ResourceType, filters...)
+	filtered, err := g.Filter(resourceType, filters...)
 	if err != nil {
 		return nil, err
 	}
-	resources, err = filtered.GetAllResources(q.ResourceType)
+	resources, err = filtered.GetAllResources(resourceType)
 	if err != nil {
 		return nil, err
 	}

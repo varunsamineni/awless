@@ -66,6 +66,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sts/stsiface"
 	"github.com/wallix/awless/aws/fetch"
 	"github.com/wallix/awless/cloud"
+	"github.com/wallix/awless/cloud/graph"
 	"github.com/wallix/awless/fetch"
 	"github.com/wallix/awless/graph"
 	"github.com/wallix/awless/logger"
@@ -357,7 +358,7 @@ func (s *Infra) ResourceTypes() []string {
 	}
 }
 
-func (s *Infra) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Infra) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1048,7 +1049,7 @@ func (s *Infra) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Infra) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Infra) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1108,7 +1109,7 @@ func (s *Access) ResourceTypes() []string {
 	}
 }
 
-func (s *Access) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Access) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1315,7 +1316,7 @@ func (s *Access) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Access) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Access) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1366,7 +1367,7 @@ func (s *Storage) ResourceTypes() []string {
 	}
 }
 
-func (s *Storage) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Storage) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1463,7 +1464,7 @@ func (s *Storage) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Storage) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Storage) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1519,7 +1520,7 @@ func (s *Messaging) ResourceTypes() []string {
 	}
 }
 
-func (s *Messaging) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Messaging) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1638,7 +1639,7 @@ func (s *Messaging) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Messaging) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Messaging) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1689,7 +1690,7 @@ func (s *Dns) ResourceTypes() []string {
 	}
 }
 
-func (s *Dns) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Dns) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1786,7 +1787,7 @@ func (s *Dns) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Dns) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Dns) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1836,7 +1837,7 @@ func (s *Lambda) ResourceTypes() []string {
 	}
 }
 
-func (s *Lambda) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Lambda) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -1911,7 +1912,7 @@ func (s *Lambda) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Lambda) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Lambda) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -1962,7 +1963,7 @@ func (s *Monitoring) ResourceTypes() []string {
 	}
 }
 
-func (s *Monitoring) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Monitoring) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -2059,7 +2060,7 @@ func (s *Monitoring) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Monitoring) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Monitoring) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -2109,7 +2110,7 @@ func (s *Cdn) ResourceTypes() []string {
 	}
 }
 
-func (s *Cdn) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Cdn) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -2184,7 +2185,7 @@ func (s *Cdn) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Cdn) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Cdn) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
@@ -2234,7 +2235,7 @@ func (s *Cloudformation) ResourceTypes() []string {
 	}
 }
 
-func (s *Cloudformation) Fetch(ctx context.Context) (*graph.Graph, error) {
+func (s *Cloudformation) Fetch(ctx context.Context) (cloudgraph.GraphAPI, error) {
 	if s.IsSyncDisabled() {
 		return graph.NewGraph(), nil
 	}
@@ -2309,7 +2310,7 @@ func (s *Cloudformation) Fetch(ctx context.Context) (*graph.Graph, error) {
 	return gph, nil
 }
 
-func (s *Cloudformation) FetchByType(ctx context.Context, t string) (*graph.Graph, error) {
+func (s *Cloudformation) FetchByType(ctx context.Context, t string) (cloudgraph.GraphAPI, error) {
 	defer s.fetcher.Reset()
 	return s.fetcher.FetchByType(context.WithValue(ctx, "region", s.region), t)
 }
