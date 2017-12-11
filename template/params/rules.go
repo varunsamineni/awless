@@ -47,7 +47,7 @@ func (n allOf) Required() (all []string) {
 }
 
 func (n allOf) String() string {
-	return n.rules.join(", ")
+	return n.rules.join(" + ")
 }
 
 type onlyOneOf struct {
@@ -89,7 +89,7 @@ func (n onlyOneOf) Required() (all []string) {
 }
 
 func (n onlyOneOf) String() string {
-	return "[" + n.rules.join(" | ") + "]"
+	return "(" + n.rules.join(" | ") + ")"
 }
 
 type atLeastOneOf struct {
@@ -131,7 +131,7 @@ func (n atLeastOneOf) Required() (all []string) {
 }
 
 func (n atLeastOneOf) String() string {
-	return fmt.Sprintf("at least one of %v", n.rules)
+	return "(" + n.rules.join(" / ") + ")"
 }
 
 type opt struct {

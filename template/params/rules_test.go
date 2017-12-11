@@ -6,6 +6,24 @@ import (
 	"testing"
 )
 
+func TestPrintRules(t *testing.T) {
+	tcases := []struct {
+		rules Rule
+		out   string
+	}{
+		{rules: AllOf(Key("1"), Key("2"), OnlyOneOf(Key("3"), Key("4")), AtLeastOneOf(Key("5"), Key("6"))),
+			out: "1 + 2 + (3 | 4) + (5 / 6)"},
+		{rules: AllOf(OnlyOneOf(Key("user"), Key("group"), Key("role")), OnlyOneOf(Key("arn"), AllOf(Key("service"), Key("access")))),
+			out: "(user | group | role	) + (arn | service + access)"},
+	}
+
+	for _, tcase := range tcases {
+		if got, want := tcase.rules.String(), tcase.out; got != want {
+			t.Fatalf("got %q, want %q", got, want)
+		}
+	}
+}
+
 func TestRuleOptionals(t *testing.T) {
 	tcases := []struct {
 		rules     Rule
